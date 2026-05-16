@@ -4482,27 +4482,35 @@ async function saveToSheet(){
   // Dirty-Check: nur Übungen senden die Daten haben
   const prevKey='pb_prev_'+C+'_'+W+'_'+D;
   const prev=JSON.parse(localStorage.getItem(prevKey)||'{}');
+  const getDayValues=()=>({
+    kg:       document.getElementById('bwInput')?.value||'',
+    kcal:     document.getElementById('kcalInput')?.value||'',
+    bpm:      document.getElementById('pulseInput')?.value||'',
+    duration: document.getElementById('durInput')?.value||''
+  });
 
   const buildToSend=()=>day.exercises.map((ex,i)=>{
       const d=getD(C,W,D,i);
       const displayName=getExName(i);
       if(!d.g1&&!d.r1)return null; // keine Daten
       const p=prev[i]||{};
+      const dayValues=getDayValues();
       const dirty=['g1','r1','g2','r2','g3','r3','rpe','notes'].some(f=>String(d[f])!==String(p[f]||''));
-      if(!dirty&&p.sent)return null;
+      const dayDirty=['kg','kcal','bpm','duration'].some(f=>String(dayValues[f])!==String(p[f]||''));
+      if(!dirty&&!dayDirty&&p.sent)return null;
       return{
         sheet:    sheetName,
         date:     day.date,
         uebung:   displayName||ex,
         originalName: ex,
-        kg:       document.getElementById('bwInput')?.value||'',
+        kg:       dayValues.kg,
         g1:d.g1||'', r1:d.r1||'',
         g2:d.g2||'', r2:d.r2||'',
         g3:d.g3||'', r3:d.r3||'',
         rpe:      d.rpe||'',
-        kcal:     document.getElementById('kcalInput')?.value||'',
-        bpm:      document.getElementById('pulseInput')?.value||'',
-        duration: document.getElementById('durInput')?.value||'',
+        kcal:     dayValues.kcal,
+        bpm:      dayValues.bpm,
+        duration: dayValues.duration,
         notes:    d.notes||'',
         _exIdx:   i,
       };
@@ -4543,7 +4551,7 @@ async function saveToSheet(){
   const newPrev = JSON.parse(localStorage.getItem(prevKey)||'{}');
   toSend.forEach(e => {
     const d = getD(C,W,D,e._exIdx);
-    newPrev[e._exIdx] = {g1:d.g1,r1:d.r1,g2:d.g2,r2:d.r2,g3:d.g3,r3:d.r3,rpe:d.rpe,notes:d.notes,sent:true};
+    newPrev[e._exIdx] = {g1:d.g1,r1:d.r1,g2:d.g2,r2:d.r2,g3:d.g3,r3:d.r3,rpe:d.rpe,kg:e.kg,kcal:e.kcal,bpm:e.bpm,duration:e.duration,notes:d.notes,sent:true};
   });
   localStorage.setItem(prevKey, JSON.stringify(newPrev));
 
