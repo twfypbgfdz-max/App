@@ -3065,6 +3065,17 @@ function applySheetNamesToDay(c,w,d,rows){
   const day=PLAN[c]?.weeks?.[w]?.days?.[d];
   if(!day)return{ok:false,changed:false,message:'Training nicht gefunden'};
   const names=(rows||[]).map(r=>String(r.name||'').trim()).filter(Boolean);
+  if(names.length<day.exercises.length)return{ok:false,changed:false,message:'Sheet-Zeilen passen nicht zur Uebungsanzahl'};
+  if(names.length>day.exercises.length){
+    const normalizedExtra=names.map(canonicalSheetName);
+    if(normalizedExtra.some(n=>!n))return{ok:false,changed:false,message:'Leere Uebungsnamen im Sheet'};
+    if(new Set(normalizedExtra).size!==normalizedExtra.length)return{ok:false,changed:false,message:'Doppelte Uebungsnamen im Sheet'};
+    const appNames=day.exercises.map((_,i)=>getHistoricalExName(c,w,d,i)).map(canonicalSheetName);
+    if(new Set(appNames).size!==appNames.length)return{ok:false,changed:false,message:'Doppelte Uebungsnamen in der App'};
+    const missing=appNames.filter(appName=>normalizedExtra.filter(sheetName=>sheetName===appName).length!==1);
+    if(missing.length)return{ok:false,changed:false,message:'Sheet-Zeilen passen nicht zur Uebungsanzahl'};
+    return{ok:true,changed:false,message:''};
+  }
   if(names.length!==day.exercises.length)return{ok:false,changed:false,message:'Sheet-Zeilen passen nicht zur Übungsanzahl'};
   const normalized=names.map(canonicalSheetName);
   if(normalized.some(n=>!n))return{ok:false,changed:false,message:'Leere Übungsnamen im Sheet'};

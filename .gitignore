@@ -30,6 +30,7 @@ Desktop.ini
 
 # Lokale Claude/Codex-Worktrees
 .claude/
+.clasp.json
 
 # Node optional
 node_modules/
