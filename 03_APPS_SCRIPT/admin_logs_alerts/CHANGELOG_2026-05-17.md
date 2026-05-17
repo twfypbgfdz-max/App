@@ -11,6 +11,9 @@
 - Dedup-Key robuster dokumentiert: primaer stabile Alert-Felder, `rowNumber` nur noch als Fallback.
 - Minimalen manuellen Gmail-Versand dokumentiert.
 - Script Properties `ADMIN_ALERT_EMAIL_TO` und optional `ADMIN_ALERT_EMAIL_ENABLED` dokumentiert.
+- Manuelles Testergebnis dokumentiert: Testmail erfolgreich.
+- Manuelles Testergebnis dokumentiert: echte Notify-Funktion hat eine Alert-Mail gesendet.
+- Manuelles Testergebnis dokumentiert: zweiter Notify-Lauf wurde durch Deduping korrekt unterdrueckt (`gesamt=1 bekannt=1 gesendet=0 fehlgeschlagen=0`).
 
 ## Umgesetzt
 
@@ -23,6 +26,7 @@
 - Manueller Gmail-Testversand mit `sendTestAdminAlert()`.
 - Gmail-Notify-Funktion `scanAdminLogAlertsAndNotify()` ohne Trigger.
 - Config-Pruefung fuer Gmail-Properties.
+- Erfolgreicher manueller Gmail-Testlauf ohne Trigger.
 
 ## Noch nicht umgesetzt
 

@@ -76,6 +76,9 @@ Keine Secrets, privaten Sheet-IDs, Webhook-URLs oder Tokens ins Repo schreiben.
 - Lokale Dry-Run-Implementierung vorhanden.
 - Lokales Deduping ueber Script Properties vorhanden.
 - Manueller Gmail-Versand vorhanden.
+- Manuell getestet: `sendTestAdminAlert()` hat eine Testmail gesendet.
+- Manuell getestet: `scanAdminLogAlertsAndNotify()` hat eine Alert-Mail fuer einen neuen offenen P0/P1-Eintrag gesendet.
+- Manuell getestet: zweiter Notify-Lauf hat Deduping korrekt erkannt (`gesamt=1 bekannt=1 gesendet=0 fehlgeschlagen=0`).
 - Noch keine Trigger aktiv.
 - Noch keine Webhooks aktiv.
 - Kein Deployment erfolgt.
