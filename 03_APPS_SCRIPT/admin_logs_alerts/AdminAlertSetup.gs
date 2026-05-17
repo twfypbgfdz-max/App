@@ -1,22 +1,43 @@
 // Admin-Alert-Setup
-// Vorbereitungsstruktur ohne aktive Trigger oder externe Verbindungen.
+// Trigger werden nur gezielt fuer scanAdminLogAlertsAndNotify verwaltet.
+
+const ADMIN_ALERT_TRIGGER_FUNCTION = 'scanAdminLogAlertsAndNotify';
 
 function setupAdminAlertTrigger() {
-  // Platzhalter: noch keinen Trigger erstellen.
-  // Spaeter erst nach Freigabe einen zeitgesteuerten Trigger fuer
-  // scanAdminLogAlerts() anlegen.
+  const existing = getAdminAlertTriggers_();
+  if (existing.length > 0) {
+    Logger.log('Admin-Alert Trigger existiert bereits: ' + existing.length);
+    return {
+      skipped: true,
+      existing: existing.length,
+      handler: ADMIN_ALERT_TRIGGER_FUNCTION
+    };
+  }
+
+  const trigger = ScriptApp.newTrigger(ADMIN_ALERT_TRIGGER_FUNCTION)
+    .timeBased()
+    .everyMinutes(30)
+    .create();
+
+  Logger.log('Admin-Alert Trigger erstellt fuer ' + ADMIN_ALERT_TRIGGER_FUNCTION + ' alle 30 Minuten.');
   return {
-    skipped: true,
-    reason: 'Trigger-Setup ist noch nicht aktiv.'
+    created: true,
+    triggerId: trigger.getUniqueId(),
+    handler: ADMIN_ALERT_TRIGGER_FUNCTION,
+    interval: '30 Minuten'
   };
 }
 
 function removeAdminAlertTriggers() {
-  // Platzhalter: noch keine Trigger entfernen.
-  // Spaeter gezielt nur Trigger fuer scanAdminLogAlerts() suchen und entfernen.
+  const triggers = getAdminAlertTriggers_();
+  triggers.forEach(trigger => {
+    ScriptApp.deleteTrigger(trigger);
+  });
+
+  Logger.log('Admin-Alert Trigger entfernt: ' + triggers.length);
   return {
-    skipped: true,
-    reason: 'Trigger-Entfernung ist noch nicht aktiv.'
+    removed: triggers.length,
+    handler: ADMIN_ALERT_TRIGGER_FUNCTION
   };
 }
 
@@ -45,4 +66,10 @@ function maskEmail_(email) {
   const name = parts[0];
   const domain = parts[1];
   return name.slice(0, 2) + '***@' + domain.slice(0, 2) + '***';
+}
+
+function getAdminAlertTriggers_() {
+  return ScriptApp.getProjectTriggers().filter(trigger => {
+    return trigger.getHandlerFunction() === ADMIN_ALERT_TRIGGER_FUNCTION;
+  });
 }

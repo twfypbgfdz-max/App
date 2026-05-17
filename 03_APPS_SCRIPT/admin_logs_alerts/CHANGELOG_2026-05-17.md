@@ -14,6 +14,8 @@
 - Manuelles Testergebnis dokumentiert: Testmail erfolgreich.
 - Manuelles Testergebnis dokumentiert: echte Notify-Funktion hat eine Alert-Mail gesendet.
 - Manuelles Testergebnis dokumentiert: zweiter Notify-Lauf wurde durch Deduping korrekt unterdrueckt (`gesamt=1 bekannt=1 gesendet=0 fehlgeschlagen=0`).
+- Trigger-Setup fuer `scanAdminLogAlertsAndNotify()` alle 30 Minuten dokumentiert.
+- Trigger-Entfernung fuer exakt diesen Handler dokumentiert.
 
 ## Umgesetzt
 
@@ -27,10 +29,12 @@
 - Gmail-Notify-Funktion `scanAdminLogAlertsAndNotify()` ohne Trigger.
 - Config-Pruefung fuer Gmail-Properties.
 - Erfolgreicher manueller Gmail-Testlauf ohne Trigger.
+- Gezieltes Trigger-Setup ohne doppelte Trigger.
+- Gezieltes Entfernen nur der Admin-Alert-Trigger.
 
 ## Noch nicht umgesetzt
 
-- Keine Trigger.
+- Kein Trigger automatisch erstellt.
 - Keine Discord-Webhooks.
 - Discord-/Webhook-Versand bleibt No-op.
 - Keine echten Secrets.

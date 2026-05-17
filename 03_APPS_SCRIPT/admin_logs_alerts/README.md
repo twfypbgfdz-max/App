@@ -60,7 +60,8 @@ Keine Secrets, privaten Sheet-IDs, Webhook-URLs oder Tokens ins Repo schreiben.
 4. `sendTestAdminAlert()` manuell ausfuehren.
 5. `dryRunAdminLogAlerts()` ausfuehren.
 6. `scanAdminLogAlertsAndNotify()` erst danach manuell ausfuehren.
-7. Trigger erst spaeter separat und nach Freigabe einrichten.
+7. `setupAdminAlertTrigger()` manuell ausfuehren, wenn der automatische Lauf aktiviert werden soll.
+8. `removeAdminAlertTriggers()` manuell ausfuehren, wenn der automatische Lauf deaktiviert werden soll.
 
 ## Abgrenzung
 
@@ -79,7 +80,9 @@ Keine Secrets, privaten Sheet-IDs, Webhook-URLs oder Tokens ins Repo schreiben.
 - Manuell getestet: `sendTestAdminAlert()` hat eine Testmail gesendet.
 - Manuell getestet: `scanAdminLogAlertsAndNotify()` hat eine Alert-Mail fuer einen neuen offenen P0/P1-Eintrag gesendet.
 - Manuell getestet: zweiter Notify-Lauf hat Deduping korrekt erkannt (`gesamt=1 bekannt=1 gesendet=0 fehlgeschlagen=0`).
-- Noch keine Trigger aktiv.
+- Trigger-Setup-Code vorhanden: `setupAdminAlertTrigger()` erstellt gezielt einen Zeittrigger fuer `scanAdminLogAlertsAndNotify()` alle 30 Minuten.
+- Trigger-Remove-Code vorhanden: `removeAdminAlertTriggers()` entfernt nur Trigger fuer `scanAdminLogAlertsAndNotify()`.
+- Trigger werden nicht automatisch erstellt; Aktivierung erfolgt nur durch manuellen Funktionsaufruf im Apps Script Editor.
 - Noch keine Webhooks aktiv.
 - Kein Deployment erfolgt.
 - Keine Google-Sheet-Aenderungen durch diese lokale Struktur.
