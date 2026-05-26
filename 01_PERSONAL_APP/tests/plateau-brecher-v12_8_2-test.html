@@ -1374,19 +1374,30 @@ const sheetHistoryLoading={};
 const ADMIN_LOG_URL='https://script.google.com/macros/s/AKfycbwonJnXhw3k0saV9DdqU0t5U6fY4AHW8sdoH6Oq1WuDD3ILH_bPN-JOkl9Znu7F_sAH/exec';
 function logToAdmin(type,message,opts={}){
   try{
+    const originalType=String(type||'JS_ERROR').toUpperCase();
     const cleanMsg=String(message||'').replace(/(gsk_|AIza)[a-zA-Z0-9_-]+/g,'[REDACTED]').substring(0,500);
+    const cleanDetail=String(opts.detail||'').substring(0,500);
+    const cleanStack=String(opts.stack||'').substring(0,800);
+    const cleanHttpStatus=String(opts.httpStatus||'');
     const payload={
+      type:       'log',
+      type_detail: originalType,
+      msg:        cleanMsg,
+      ver:        APP_VERSION,
       appVersion: APP_VERSION,
+      app:        'PERSONAL',
       env:        'PERSONAL',
-      type:       String(type||'JS_ERROR').toUpperCase(),
       message:    cleanMsg,
-      detail:     String(opts.detail||'').substring(0,500),
+      detail:     cleanDetail,
+      status:     'error',
+      priority:   originalType==='SYNC_FINAL_ERROR'?'high':'medium',
       url:        String(opts.url||location.href).substring(0,300),
       device:     navigator.userAgent.slice(0,300),
-      stack:      String(opts.stack||'').substring(0,800),
-      httpStatus: String(opts.httpStatus||'')
+      stack:      cleanStack,
+      httpStatus: cleanHttpStatus
     };
-    fetch(ADMIN_LOG_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)}).catch(()=>{});
+    fetch(ADMIN_LOG_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)})
+      .catch(err=>console.warn('[Admin Log] send failed',err&&err.message?err.message:err));
   }catch(_){}
 }
 // Rückwärtskompatibilität: logToSystem leitet an logToAdmin weiter
