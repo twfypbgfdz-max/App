@@ -693,49 +693,52 @@ main{padding:16px;max-width:860px;}
 [data-theme="light"] .prog-stat-val{color:#111;}
 .prog-stat-diff{font-family:'DM Mono',monospace;font-size:9px;margin-top:4px;line-height:1.25;}
 .top-progress-card{
-  background:linear-gradient(180deg,rgba(255,255,255,.026),var(--sur));
-  border:1px solid var(--bor);border-radius:var(--r);padding:14px;margin-bottom:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.022),var(--sur));
+  border:1px solid var(--bor);border-radius:var(--r);padding:13px;margin-bottom:12px;
 }
-.top-progress-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.top-progress-hd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px;}
 .top-progress-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:1px;color:var(--tx);line-height:1;}
 .top-progress-sub{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);line-height:1.35;margin-top:4px;}
-.top-progress-list{display:grid;gap:8px;}
-.top-progress-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--bor);}
+.top-progress-list{display:grid;gap:6px;}
+.top-progress-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 0;border-top:1px solid var(--bor);}
 .top-progress-row:first-child{border-top:0;}
+.top-progress-rank{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);background:var(--sur2);border:1px solid var(--bor);border-radius:999px;padding:3px 5px;line-height:1;}
 .top-progress-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:.8px;color:var(--tx);line-height:1.05;overflow-wrap:anywhere;}
 .top-progress-meta{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--mu);margin-top:3px;line-height:1.35;}
-.top-progress-delta{font-family:'Barlow Condensed',sans-serif;font-size:22px;letter-spacing:1px;color:var(--ok);white-space:nowrap;}
+.top-progress-delta{font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:1px;color:var(--ok);white-space:nowrap;}
 .top-progress-empty{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);padding:14px 0 2px;text-align:center;}
 .coach-insight-card{
-  background:linear-gradient(180deg,rgba(200,255,0,.035),var(--sur));
-  border:1px solid var(--bor);border-radius:var(--r);padding:14px;margin-bottom:14px;
+  background:linear-gradient(180deg,rgba(200,255,0,.025),var(--sur));
+  border:1px solid var(--bor);border-radius:var(--r);padding:12px;margin-bottom:12px;
 }
-.coach-insight-list{display:flex;gap:8px;flex-wrap:wrap;}
+.coach-insight-list{display:flex;gap:7px;flex-wrap:wrap;}
 .coach-insight-chip{
-  display:flex;align-items:center;gap:7px;min-width:0;
+  display:flex;align-items:center;gap:6px;min-width:0;
   background:var(--sur2);border:1px solid var(--bor);border-radius:999px;
-  padding:7px 10px;font-family:'DM Mono',monospace;font-size:9px;line-height:1.35;color:var(--tx2);
+  padding:6px 9px;font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.3;color:var(--tx2);
 }
 .coach-insight-chip.good{border-color:rgba(0,230,118,.22);}
-.coach-insight-chip.watch{border-color:rgba(255,214,0,.22);}
+.coach-insight-chip.watch{border-color:rgba(255,214,0,.14);}
 .coach-insight-chip.load{border-color:rgba(200,255,0,.18);}
 .coach-insight-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex:0 0 auto;}
 .coach-insight-chip.good .coach-insight-dot{background:var(--ok);}
-.coach-insight-chip.watch .coach-insight-dot{background:var(--warn);}
+.coach-insight-chip.watch .coach-insight-dot{background:var(--mu);}
 .progress-timeline-card{
-  background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);
-  padding:14px;margin-bottom:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.018),var(--sur));
+  border:1px solid var(--bor);border-radius:var(--r);padding:12px;margin-bottom:12px;
 }
 .progress-timeline-list{display:grid;gap:0;}
-.progress-timeline-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:8px 0;border-top:1px solid var(--bor);}
+.progress-timeline-row{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--bor);}
 .progress-timeline-row:first-child{border-top:0;}
 .progress-timeline-dot{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(0,230,118,.08);}
-.progress-timeline-dot.watch{background:var(--warn);box-shadow:0 0 0 3px rgba(255,214,0,.08);}
+.progress-timeline-dot.watch{background:var(--mu);box-shadow:0 0 0 3px rgba(255,255,255,.045);}
+.progress-timeline-dot.best{background:var(--acc);box-shadow:0 0 0 3px rgba(200,255,0,.07);}
 .progress-timeline-main{min-width:0;}
-.progress-timeline-date{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:.6px;text-transform:uppercase;}
-.progress-timeline-name{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:.7px;color:var(--tx);line-height:1.05;overflow-wrap:anywhere;}
+.progress-timeline-date{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--mu);letter-spacing:.6px;text-transform:uppercase;}
+.progress-timeline-name{font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:.6px;color:var(--tx);line-height:1.05;overflow-wrap:anywhere;}
 .progress-timeline-delta{font-family:'DM Mono',monospace;font-size:10px;color:var(--ok);font-weight:700;white-space:nowrap;}
-.progress-timeline-delta.watch{color:var(--warn);}
+.progress-timeline-delta.watch{color:var(--mu);}
+.progress-timeline-delta.best{color:var(--acc);}
 .prog-vol-bar-wrap{margin:8px 0;}
 .prog-vol-bar-hd{display:flex;justify-content:space-between;margin-bottom:5px;}
 .prog-vol-bar-lbl{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;}
@@ -938,16 +941,16 @@ main{padding:16px;max-width:860px;}
   .prog-stat-grid,.mheat-grid{grid-template-columns:1fr;gap:10px;}
   .prog-stat-card,.mheat-card{padding:14px;}
   .prog-stat-val{font-size:30px;}
-  .top-progress-card{padding:12px;margin-bottom:12px;}
+  .top-progress-card{padding:11px;margin-bottom:11px;}
   .top-progress-title{font-size:19px;}
-  .top-progress-row{grid-template-columns:minmax(0,1fr) auto;padding:8px 0;}
+  .top-progress-row{grid-template-columns:auto minmax(0,1fr) auto;padding:7px 0;}
   .top-progress-name{font-size:16px;}
-  .top-progress-delta{font-size:21px;}
-  .coach-insight-card{padding:12px;margin-bottom:12px;}
+  .top-progress-delta{font-size:22px;}
+  .coach-insight-card{padding:11px;margin-bottom:11px;}
   .coach-insight-list{display:grid;gap:7px;}
-  .coach-insight-chip{border-radius:8px;padding:8px 9px;}
-  .progress-timeline-card{padding:12px;margin-bottom:12px;}
-  .progress-timeline-row{grid-template-columns:auto minmax(0,1fr) auto;gap:8px;padding:8px 0;}
+  .coach-insight-chip{border-radius:8px;padding:7px 8px;}
+  .progress-timeline-card{padding:11px;margin-bottom:11px;}
+  .progress-timeline-row{grid-template-columns:auto minmax(0,1fr) auto;gap:7px;padding:7px 0;}
   .progress-timeline-name{font-size:15px;}
   .progress-timeline-delta{font-size:9.5px;}
   .prog-chart-sub{font-size:9px;line-height:1.45;margin-bottom:12px;}
@@ -1123,6 +1126,7 @@ main{padding:16px;max-width:860px;}
   <div id="coachInsightsWrap"></div>
   <div id="topProgressWrap"></div>
   <div id="progressTimelineWrap"></div>
+  <div id="bestleistungenTimelineWrap"></div>
   <div id="watchlistWrap"></div>
 
   <!-- 1RM VERLAUF -->
@@ -4429,6 +4433,7 @@ function renderProgress(){
   renderCoachInsightsCard();
   renderTopProgressCard();
   renderProgressTimelineCard();
+  renderBestleistungenTimelineCard();
   renderWatchlistCard();
   renderProgressChart();
   renderVolChart();
@@ -5271,8 +5276,9 @@ function renderTopProgressCard(){
   if(!wrap)return;
   const stats=buildTopProgressStats();
   const rows=stats.length
-    ? '<div class="top-progress-list">'+stats.map(item=>
+    ? '<div class="top-progress-list">'+stats.map((item,idx)=>
         '<div class="top-progress-row">'
+        +'<div class="top-progress-rank">#'+(idx+1)+'</div>'
         +'<div><div class="top-progress-name">'+item.name+'</div><div class="top-progress-meta">über '+item.units+' Einheiten · '+item.from+' → '+item.to+' kg 1RM</div></div>'
         +'<div class="top-progress-delta">+'+item.delta+' kg</div>'
         +'</div>'
@@ -5320,6 +5326,61 @@ function renderProgressTimelineCard(){
     : '<div class="top-progress-empty">Noch keine Fortschritte erkannt.</div>';
   wrap.innerHTML='<div class="progress-timeline-card">'
     +'<div class="top-progress-hd"><div><div class="top-progress-title">Letzte Fortschritte</div><div class="top-progress-sub">Positive Trainingstrends aus der lokalen Historie</div></div></div>'
+    +rows
+    +'</div>';
+}
+
+function parsePRDateOrder(rawDate){
+  const raw=String(rawDate||'').trim();
+  if(!raw)return 0;
+  let m=raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m)return parseInt(m[1]+m[2]+m[3],10);
+  m=raw.match(/^(\d{1,2})\.(\d{1,2})\.(\d{2}|\d{4})$/);
+  if(m){
+    const yy=m[3].length===2?2000+parseInt(m[3],10):parseInt(m[3],10);
+    return yy*10000+parseInt(m[2],10)*100+parseInt(m[1],10);
+  }
+  m=raw.match(/^(\d{1,2})\.(\d{1,2})$/);
+  if(m){
+    const yy=new Date().getFullYear();
+    return yy*10000+parseInt(m[2],10)*100+parseInt(m[1],10);
+  }
+  return 0;
+}
+
+function buildBestleistungenTimelineEntries(){
+  return Object.keys(store)
+    .filter(k=>k.startsWith('rec_'))
+    .map(k=>({name:k.replace('rec_',''),rec:store[k]||{}}))
+    .filter(item=>item.rec.source==='Bestleistungen'&&shouldShowPRRecordName(item.name)&&parseFloat(item.rec.orm)>0)
+    .map(item=>({
+      name:item.name,
+      date:item.rec.date||'',
+      orm:parseFloat(item.rec.orm)||0,
+      weight:item.rec.weight||null,
+      reps:item.rec.reps||null,
+      order:parsePRDateOrder(item.rec.date)
+    }))
+    .sort((a,b)=>a.order-b.order)
+    .slice(-6);
+}
+
+function renderBestleistungenTimelineCard(){
+  const wrap=document.getElementById('bestleistungenTimelineWrap');
+  if(!wrap)return;
+  const entries=buildBestleistungenTimelineEntries();
+  const rows=entries.length
+    ? '<div class="progress-timeline-list">'+entries.map(item=>{
+        const setLine=(item.weight&&item.reps)?'<div class="top-progress-meta">'+item.weight+' kg × '+item.reps+'</div>':'';
+        return '<div class="progress-timeline-row">'
+          +'<div class="progress-timeline-dot best"></div>'
+          +'<div class="progress-timeline-main"><div class="progress-timeline-date">'+formatPRDateForDisplay(item.date)+'</div><div class="progress-timeline-name">'+item.name+'</div>'+setLine+'</div>'
+          +'<div class="progress-timeline-delta best">'+item.orm+' kg</div>'
+          +'</div>';
+      }).join('')+'</div>'
+    : '<div class="top-progress-empty">Noch keine Bestleistungen importiert.</div>';
+  wrap.innerHTML='<div class="progress-timeline-card">'
+    +'<div class="top-progress-hd"><div><div class="top-progress-title">Bestleistungen-Timeline</div><div class="top-progress-sub">Importierte PRs aus Bestleistungen</div></div></div>'
     +rows
     +'</div>';
 }
