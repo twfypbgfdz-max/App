@@ -271,6 +271,7 @@ main{padding:16px;max-width:860px;}
 .exercise-focus-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;}
 .exercise-focus-chip{font-family:'DM Mono',monospace;font-size:8px;color:var(--tx2);background:var(--sur2);border:1px solid var(--bor);border-radius:999px;padding:4px 7px;white-space:nowrap;}
 .exercise-focus-chip.next{color:var(--acc);border-color:rgba(200,255,0,.18);}
+.exercise-focus-chip.action{cursor:pointer;color:var(--acc3);border-color:rgba(0,212,255,.18);}
 
 /* SETS GRID */
 .sets-grid{display:grid;grid-template-columns:44px 1fr 1fr auto;gap:5px 6px;align-items:center;margin:10px 0;}
@@ -3250,11 +3251,17 @@ function renderWorkout(){
     const setNextText=nextSetIndex>=0?' &middot; N&auml;chster Satz: S'+(nextSetIndex+1):'';
     const setProgressLine='<div class="set-progress-line"><span>S&auml;tze</span><b>'+filledSets+'/'+visibleSetCount+' erledigt'+setNextText+'</b></div>';
     const focusNextText=nextSetIndex>=0?'S'+(nextSetIndex+1):'fertig';
+    const lastFilledIndex=setFilled.map((filled,idx)=>filled?idx:-1).filter(idx=>idx>=0).pop();
+    const nextEmptyAfterFilled=lastFilledIndex>=0?setFilled.findIndex((filled,idx)=>idx>lastFilledIndex&&!filled):-1;
+    const copySetButton=nextEmptyAfterFilled>=0
+      ? '<button class="exercise-focus-chip action" onclick="event.stopPropagation();copyPreviousSetToNext('+i+')" title="Letzten Satz in den nächsten leeren Satz kopieren">Satz kopieren</button>'
+      : '';
     const focusBar='<div class="exercise-focus-bar">'
       +'<div class="exercise-focus-main">'+exName+'</div>'
       +'<div class="exercise-focus-meta">'
       +'<span class="exercise-focus-chip">S&auml;tze '+filledSets+'/'+visibleSetCount+'</span>'
       +'<span class="exercise-focus-chip next">N&auml;chster Satz: '+focusNextText+'</span>'
+      +copySetButton
       +'<button class="hist-btn exercise-focus-chip" onclick="event.stopPropagation();showHistory('+i+')" title="Verlauf">Verlauf</button>'
       +'</div></div>';
     const setCls=(idx)=>{
@@ -3354,6 +3361,29 @@ function applyPreviousSet(i){
   persist();
   renderWorkout();
   showStatus('ok','Vorherigen Satz übernommen');
+}
+
+function copyPreviousSetToNext(i){
+  const d=getD(C,W,D,i);
+  const visibleSetCount=getVisibleSetCountForExercise(i);
+  const pairs=[['g1','r1'],['g2','r2'],['g3','r3']].slice(0,visibleSetCount);
+  let source=-1,target=-1;
+  pairs.forEach(([g,r],idx)=>{if(d[g]&&d[r])source=idx;});
+  if(source<0)return;
+  for(let idx=source+1;idx<pairs.length;idx++){
+    const [g,r]=pairs[idx];
+    if(!d[g]&&!d[r]){target=idx;break;}
+    if(!d[g]||!d[r]){target=idx;break;}
+  }
+  if(target<0)return;
+  const [sg,sr]=pairs[source];
+  const [tg,tr]=pairs[target];
+  if((d[tg]||d[tr])&&!confirm('Zielsatz überschreiben?'))return;
+  d[tg]=d[sg];
+  d[tr]=d[sr];
+  persist();
+  renderWorkout();
+  showStatus('ok','Satz kopiert');
 }
 
 function toggleDone(idx){
