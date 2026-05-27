@@ -541,6 +541,13 @@ main{padding:16px;max-width:860px;}
 .setup-diag-v.good{color:var(--ok);}
 .setup-diag-v.muted{color:var(--mu);}
 .setup-diag-log{grid-column:1/-1;}
+.data-quality-card{background:rgba(255,255,255,.012);border:1px solid var(--bor);border-radius:var(--r);padding:10px;margin-top:9px;}
+.data-quality-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.data-quality-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;color:var(--tx2);}
+.data-quality-summary{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);white-space:nowrap;}
+.data-quality-list{display:grid;gap:6px;}
+.data-quality-item{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.4;color:var(--tx2);background:var(--sur2);border:1px solid rgba(255,255,255,.055);border-radius:6px;padding:7px 8px;}
+.data-quality-empty{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);padding:8px 0 2px;text-align:center;}
 .danger-zone{border:1px solid rgba(255,111,64,.2);background:rgba(255,111,64,.035);border-radius:var(--r);padding:10px;margin-top:12px;}
 .danger-zone .setup-action-label{color:#d98a72;}
 .code-box{background:#000;border:1px solid var(--bor);padding:10px;margin:8px 0;font-family:'DM Mono',monospace;font-size:10px;overflow-x:auto;white-space:pre;color:var(--ok);max-height:150px;line-height:1.6;border-radius:4px;}
@@ -958,6 +965,7 @@ main{padding:16px;max-width:860px;}
   .coach-insight-list{display:grid;gap:7px;}
   .coach-insight-chip{border-radius:8px;padding:7px 8px;}
   .setup-diag-grid{grid-template-columns:1fr;gap:7px;}
+  .data-quality-head{align-items:flex-start;}
   .progress-timeline-card{padding:11px;margin-bottom:11px;}
   .progress-timeline-row{grid-template-columns:auto minmax(0,1fr) auto;gap:7px;padding:7px 0;}
   .progress-timeline-name{font-size:15px;}
@@ -1095,6 +1103,7 @@ main{padding:16px;max-width:860px;}
       <div class="setup-inline-note">Versionsstatus wird beim Update-Check direkt hier angezeigt.</div>
     </div>
     <div id="setupDiagnostics" class="setup-diag-card"></div>
+    <div id="dataQualityCard" class="data-quality-card"></div>
     <div id="appLogBox" class="log-box-wrap">
       <div class="log-box-lbl">LIVE FEHLERPROTOKOLL</div>
       <div id="appLogContent" class="log-box-content"></div>
@@ -1876,6 +1885,50 @@ function renderSetupDiagnostics(){
     +'</div>';
 }
 
+function isFiniteInputNumber(v){
+  if(v===null||v===undefined||String(v).trim()==='')return true;
+  return Number.isFinite(parseFloat(String(v).replace(',','.')));
+}
+
+function addQualityIssue(issues,text,count=1){
+  issues.push({text,count});
+}
+
+function buildDataQualityReport(){
+  const issues=[];
+  const bestNames=Array.isArray(store.prBestleistungenNames)?new Set(store.prBestleistungenNames.filter(Boolean)):null;
+  Object.keys(store).filter(k=>k.startsWith('rec_')).forEach(k=>{
+    const name=k.replace('rec_','');
+    const rec=store[k]||{};
+    const orm=parseFloat(String(rec.orm||'').replace(',','.'));
+    if(!Number.isFinite(orm)||orm<=0)addQualityIssue(issues,name+': PR ohne gültiges 1RM');
+    if(!rec.source)addQualityIssue(issues,name+': PR ohne Quelle');
+    if(rec.source==='Bestleistungen'&&(!rec.weight||!rec.reps))addQualityIssue(issues,name+': Bestleistung ohne Gewicht oder Wdh');
+    if(bestNames&&bestNames.size&&!bestNames.has(name))addQualityIssue(issues,name+': lokaler PR nicht in Bestleistungen-Liste');
+    if(shouldHidePRDisplayName(name))addQualityIssue(issues,name+': Alias-PR wird in der PR-Seite ausgeblendet');
+  });
+  Object.keys(store).filter(k=>/^\d+_\d+_\d+_\d+$/.test(k)).forEach(k=>{
+    const d=store[k]||{};
+    [['g1','r1'],['g2','r2'],['g3','r3']].forEach(([g,r],idx)=>{
+      const gv=String(d[g]||'').trim();
+      const rv=String(d[r]||'').trim();
+      if((gv&&!rv)||(!gv&&rv))addQualityIssue(issues,k+' S'+(idx+1)+': Gewicht/Wdh unvollständig');
+      if(!isFiniteInputNumber(gv)||!isFiniteInputNumber(rv))addQualityIssue(issues,k+' S'+(idx+1)+': nicht-numerischer Satzwert');
+    });
+  });
+  return{count:issues.length,items:issues.slice(0,5)};
+}
+
+function renderDataQualityCard(){
+  const el=document.getElementById('dataQualityCard');
+  if(!el)return;
+  const report=buildDataQualityReport();
+  const body=report.count
+    ? '<div class="data-quality-list">'+report.items.map(i=>'<div class="data-quality-item">'+sanitize(i.text)+'</div>').join('')+'</div>'
+    : '<div class="data-quality-empty">Keine auffälligen lokalen Daten gefunden.</div>';
+  el.innerHTML='<div class="data-quality-head"><div class="data-quality-title">Datenqualität</div><div class="data-quality-summary">'+report.count+' Hinweise</div></div>'+body;
+}
+
 // ============================================================
 // STATE
 // ============================================================
@@ -1942,6 +1995,7 @@ function init(){
   if(!store._consent){document.getElementById('consentOverlay').style.display='flex';}
   updateApiStatus();
   renderSetupDiagnostics();
+  renderDataQualityCard();
   document.getElementById('scriptCodeBox').textContent=SCRIPT_CODE;
   const bdt=document.getElementById('buildDateTxt');if(bdt)bdt.textContent=BUILD_DATE;
   if(store._lastSync){const el=document.getElementById('lastSyncTxt');if(el)el.textContent='Sync: '+store._lastSync;}
@@ -4835,7 +4889,7 @@ function showTab(id,btn){
   document.getElementById('saveFooter').style.display=(id==='workout')?'block':'none';
   if(id==='progress'){initProgressTab();}
   if(id==='records'){renderRecords();}
-  if(id==='setup'){renderSetupDiagnostics();}
+  if(id==='setup'){renderSetupDiagnostics();renderDataQualityCard();}
   if(id==='ki'){initKiTab();}
 }
 
