@@ -1091,6 +1091,7 @@ main{padding:16px;max-width:860px;}
         <button class="test-btn" onclick="exportBackup()">💾 Backup exportieren (JSON)</button>
         <input type="file" id="importFile" class="import-file" onchange="handleImport(this)">
         <button class="test-btn" onclick="document.getElementById('importFile').click()">📥 Backup importieren</button>
+        <button class="test-btn" id="restoreSnapshotBtn" onclick="restoreImportSnapshot()" style="display:none;">↩ Snapshot wiederherstellen</button>
       </div>
     </div>
     <div class="setup-action-group">
@@ -1888,6 +1889,8 @@ function buildSetupDiagnostics(){
 
 function renderSetupDiagnostics(){
   const el=document.getElementById('setupDiagnostics');
+  const restoreBtn=document.getElementById('restoreSnapshotBtn');
+  if(restoreBtn)restoreBtn.style.display=localStorage.getItem(SK+'_snapshot_before_import')?'inline-flex':'none';
   if(!el)return;
   const items=buildSetupDiagnostics();
   el.innerHTML='<div class="setup-action-label">Lokale Diagnose</div>'
@@ -1964,7 +1967,7 @@ function exportBackup(){
   a.click();
 }
 
-function createLocalSnapshot(reason){
+function createLocalSnapshot(reason,key){
   try{
     const snapshot={
       createdAt:new Date().toISOString(),
@@ -1972,11 +1975,35 @@ function createLocalSnapshot(reason){
       reason:reason||'manual',
       store:JSON.parse(JSON.stringify(store||{}))
     };
-    localStorage.setItem(SK+'_snapshot_before_import',JSON.stringify(snapshot));
+    localStorage.setItem(key||SK+'_snapshot_before_import',JSON.stringify(snapshot));
     return true;
   }catch(e){
     addToErrorLog('SNAPSHOT_WARN','Snapshot fehlgeschlagen: '+(e&&e.message?e.message:e));
     return false;
+  }
+}
+
+function restoreImportSnapshot(){
+  if(!confirm('Lokale Daten durch Snapshot ersetzen?'))return;
+  if(!confirm('Wirklich wiederherstellen? Aktuelle lokale Daten werden überschrieben.'))return;
+  try{
+    const raw=localStorage.getItem(SK+'_snapshot_before_import');
+    if(!raw){showSetupStatus('err','Kein Snapshot vorhanden.');return;}
+    const snapshot=JSON.parse(raw);
+    if(!snapshot||typeof snapshot!=='object'||!snapshot.store||typeof snapshot.store!=='object'||Array.isArray(snapshot.store)){
+      showSetupStatus('err','Snapshot ungültig. Wiederherstellung abgebrochen.');
+      addToErrorLog('SNAPSHOT_WARN','Ungültiger Snapshot');
+      return;
+    }
+    const safetyOk=createLocalSnapshot('before_restore',SK+'_snapshot_before_restore');
+    if(!safetyOk)addToErrorLog('SNAPSHOT_WARN','Sicherung vor Restore fehlgeschlagen');
+    store=JSON.parse(JSON.stringify(snapshot.store));
+    localStorage.setItem(SK,JSON.stringify(store));
+    showSetupStatus('ok','Snapshot wiederhergestellt. App wird neu geladen.');
+    location.reload();
+  }catch(e){
+    showSetupStatus('err','Snapshot konnte nicht wiederhergestellt werden.');
+    addToErrorLog('SNAPSHOT_WARN','Restore fehlgeschlagen: '+(e&&e.message?e.message:e));
   }
 }
 
