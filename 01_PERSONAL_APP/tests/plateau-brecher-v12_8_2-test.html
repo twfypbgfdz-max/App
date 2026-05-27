@@ -305,6 +305,8 @@ main{padding:16px;max-width:860px;}
 [data-theme="light"] .orm-inline{color:#111;background:rgba(0,0,0,.06);}
 .prev-session-line{font-family:'DM Mono',monospace;font-size:9px;line-height:1.45;color:var(--mu);background:rgba(0,212,255,.045);border:1px solid rgba(0,212,255,.12);border-radius:var(--r);padding:6px 9px;margin:7px 0 9px;}
 .prev-session-line b{color:var(--acc3);font-weight:600;}
+.quick-apply-btn{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.18);color:var(--acc3);font-family:'DM Mono',monospace;font-size:8px;padding:4px 7px;border-radius:999px;margin-left:7px;cursor:pointer;white-space:nowrap;}
+.quick-apply-btn:active{transform:scale(.98);}
 
 /* WARMUP BLOCK */
 .warmup-toggle{
@@ -931,6 +933,7 @@ main{padding:16px;max-width:860px;}
   .sinput::placeholder{font-size:9px;}
   .orm-inline{font-size:7.5px;min-width:0;padding:2px 4px;color:var(--tx2);background:rgba(255,255,255,.035);}
   .prev-session-line{font-size:8px;padding:6px 8px;margin:6px 0 8px;}
+  .quick-apply-btn{display:inline-flex;margin-left:0;margin-top:5px;font-size:7.5px;padding:4px 6px;}
   .warmup-toggle{font-size:7.5px;padding:5px 0;}
   .coach-rec,.load-suggest{font-size:8px;padding:6px 8px;margin-bottom:7px;}
   .stats-row{gap:7px;margin-bottom:10px;}
@@ -3199,7 +3202,7 @@ function renderWorkout(){
       if(prevEntry.g1)prevG=prevEntry.g1;
     }
     const prevSetLine=(prevData&&prevData.g1&&prevData.r1)
-      ? '<div class="prev-session-line">Letztes Mal: <b>'+prevData.g1+' kg × '+prevData.r1+'</b>'+(prevOrm?' · 1RM '+prevOrm+' kg':'')+'</div>'
+      ? '<div class="prev-session-line">Letztes Mal: <b>'+prevData.g1+' kg × '+prevData.r1+'</b>'+(prevOrm?' · 1RM '+prevOrm+' kg':'')+'<button class="quick-apply-btn" onclick="event.stopPropagation();applyPreviousSet('+i+')">Wie letztes Mal</button></div>'
       : '';
 
     // Progressionspfeil — nur wenn aktuelle Session Daten hat UND Vorwoche vorhanden
@@ -3334,6 +3337,23 @@ function toggleWarmup(i){
   if(!tog||!body)return;
   tog.classList.toggle('wu-open');
   body.classList.toggle('wu-open');
+}
+
+function applyPreviousSet(i){
+  const week=PLAN[C].weeks[W];
+  const exName=getExName(i);
+  const prevEntry=week.isDeload
+    ? (findPreviousExerciseEntry(exName,{sameCycleOnly:true})||findPreviousSheetExerciseEntry(exName))
+    : findPreviousExerciseEntry(exName);
+  const prevData=prevEntry?.data||null;
+  if(!prevData||!prevData.g1||!prevData.r1)return;
+  const d=getD(C,W,D,i);
+  if((d.g1||d.r1)&&!confirm('Aktuelle Werte überschreiben?'))return;
+  d.g1=prevData.g1;
+  d.r1=prevData.r1;
+  persist();
+  renderWorkout();
+  showStatus('ok','Vorherigen Satz übernommen');
 }
 
 function toggleDone(idx){
