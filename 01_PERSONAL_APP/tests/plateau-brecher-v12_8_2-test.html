@@ -436,7 +436,7 @@ main{padding:14px;max-width:860px;}
 .pr-edit-btn:active{opacity:.8;}
 .pr-del-btn{background:none;border:1px solid var(--bor);color:var(--mu);font-size:10px;padding:5px 8px;border-radius:4px;cursor:pointer;}
 .pr-del-btn:hover{border-color:var(--acc2);color:var(--acc2);}
-.pr-summary{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);padding:10px 0 4px;text-align:center;}
+.pr-summary{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mu);padding:8px 0 4px;text-align:right;line-height:1.35;}
 /* PROGRESSION ARROWS */
 .prog-arrow{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;white-space:nowrap;}
 .prog-arrow.up{color:var(--ok);background:rgba(0,230,118,.12);}
@@ -584,28 +584,29 @@ main{padding:14px;max-width:860px;}
 .pr-item{background:rgba(200,255,0,.04);border:1px solid rgba(200,255,0,.15);padding:6px 10px;margin-bottom:4px;font-family:'DM Mono',monospace;font-size:9px;display:flex;align-items:center;gap:8px;border-radius:4px;}
 [data-theme="light"] .pr-item{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.12);}
 /* PR FILTER */
-.pr-filter-row{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;}
+.pr-filter-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;}
 .pr-filter-chip{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.8px;text-transform:uppercase;padding:8px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.024);color:var(--tx2);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;}
 .pr-filter-chip.active{background:var(--acc);border-color:var(--acc);color:#000;font-weight:700;}
 [data-theme="light"] .pr-filter-chip.active{background:#111;border-color:#111;color:#fff;}
 .pr-filter-chip:active{opacity:.7;}
 /* PR Tier-Labels */
-.pr-group-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1.4px;color:var(--mu);padding:10px 0 7px;cursor:pointer;user-select:none;border-bottom:1px solid rgba(255,255,255,.075);margin-bottom:10px;line-height:1.25;overflow-wrap:anywhere;}
+.pr-group-title{display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1.2px;color:var(--mu);padding:10px 0 7px;cursor:pointer;user-select:none;border-bottom:1px solid rgba(255,255,255,.075);margin-bottom:10px;line-height:1.25;overflow-wrap:anywhere;}
 .pr-group-title.tier-1{color:var(--acc);}
 .pr-group-title.tier-2{color:var(--tx2);}
 .pr-group-title.tier-3{color:var(--mu);}
 .pr-group-meta{display:flex;align-items:center;gap:6px;font-size:11px;}
 .pr-count-badge{font-family:'DM Mono',monospace;font-size:8.5px;background:rgba(200,255,0,.075);color:var(--acc);padding:3px 8px;border-radius:999px;}
+.pr-count-badge.empty{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);color:var(--mu);}
 .pr-chev{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;}
 .pr-group-body{overflow:visible;transition:max-height .3s cubic-bezier(.4,0,.2,1);}
-.pr-group-body.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:24px;overflow:visible;}
+.pr-group-body.open{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:22px;overflow:visible;}
 /* PR Card */
-.pr-card{background:linear-gradient(180deg,rgba(255,255,255,.022),var(--sur));border:1px solid rgba(255,255,255,.075);border-radius:var(--r);padding:16px;margin-bottom:10px;min-height:158px;display:flex;flex-direction:column;transition:border-color .16s ease,background .16s ease,transform .08s ease;overflow:visible;}
+.pr-card{background:linear-gradient(180deg,rgba(255,255,255,.022),var(--sur));border:1px solid rgba(255,255,255,.075);border-radius:var(--r);padding:15px;margin-bottom:10px;min-height:150px;display:flex;flex-direction:column;transition:border-color .16s ease,background .16s ease,transform .08s ease;overflow:visible;}
 .pr-card:hover{border-color:rgba(255,255,255,.16);background:linear-gradient(180deg,rgba(255,255,255,.04),var(--sur));}
 .pr-card.has-pr{border-left:3px solid rgba(255,255,255,.18);}
-.pr-card.has-pr.tier-1{border-left:3px solid var(--acc);background:linear-gradient(90deg,rgba(200,255,0,.03) 0%,var(--sur) 58%);}
+.pr-card.has-pr.tier-1{border-left:3px solid var(--acc);border-color:rgba(200,255,0,.18);background:linear-gradient(90deg,rgba(200,255,0,.045) 0%,var(--sur) 62%);}
 .pr-card.has-pr.tier-2{border-left:3px solid rgba(255,255,255,.2);}
-.pr-card.no-pr{opacity:.58;background:rgba(255,255,255,.015);}
+.pr-card.no-pr{opacity:.82;background:rgba(255,255,255,.012);border-style:dashed;}
 .pr-card-top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start;}
 .pr-ex-name{font-size:14px;font-weight:700;line-height:1.45;min-width:0;color:var(--tx2);overflow-wrap:anywhere;word-break:normal;}
 .pr-card.tier-1 .pr-ex-name{font-size:15px;font-weight:800;color:var(--tx);}
@@ -615,18 +616,20 @@ main{padding:14px;max-width:860px;}
 .pr-badge-unit{font-size:13px;color:var(--mu);margin-left:2px;font-weight:500;}
 .pr-value-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:1px;text-transform:uppercase;margin-top:4px;}
 .pr-set-line{font-family:'DM Mono',monospace;font-size:10px;line-height:1.4;color:var(--tx2);margin-top:7px;overflow-wrap:anywhere;}
-.pr-badge.no-pr{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);}
-.pr-card-meta-row{display:flex;align-items:center;gap:8px;margin:10px 0 12px;flex-wrap:wrap;}
+.pr-badge.no-pr{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mu);line-height:1.25;white-space:normal;}
+.pr-card-meta-row{display:flex;align-items:center;gap:8px;margin:9px 0 10px;flex-wrap:wrap;}
 .pr-meta{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mu);}
+.pr-empty-state{font-family:'DM Mono',monospace;font-size:9.5px;line-height:1.45;color:var(--mu);margin:9px 0 10px;padding:8px 9px;border:1px solid rgba(255,255,255,.06);border-radius:var(--r);background:rgba(255,255,255,.018);}
+.pr-empty-state b{display:block;color:var(--tx2);font-weight:500;margin-bottom:2px;}
 .pr-trend-up{font-family:'DM Mono',monospace;font-size:9px;color:var(--ok);}
 .pr-trend-down{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc2);}
-.pr-edit-row{display:flex;gap:6px;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid rgba(255,255,255,.055);opacity:.58;flex-wrap:wrap;}
-.pr-card.no-pr .pr-edit-row{opacity:.68;}
+.pr-edit-row{display:flex;gap:6px;align-items:center;margin-top:auto;padding-top:9px;border-top:1px solid rgba(255,255,255,.045);opacity:.46;flex-wrap:wrap;}
+.pr-card.no-pr .pr-edit-row{opacity:.56;}
 .pr-card:hover .pr-edit-row,.pr-edit-row:focus-within{opacity:1;}
-.pr-override-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:.9px;text-transform:uppercase;margin-right:auto;line-height:1.25;min-width:82px;}
-.pr-edit-inp{background:rgba(255,255,255,.018);border:1px solid var(--bor);color:var(--tx2);font-family:'DM Mono',monospace;font-size:9px;padding:5px 7px;border-radius:4px;width:64px;text-align:center;}
+.pr-override-label{font-family:'DM Mono',monospace;font-size:8px;color:var(--mu);letter-spacing:.75px;text-transform:uppercase;margin-right:auto;line-height:1.25;min-width:70px;}
+.pr-edit-inp{background:rgba(255,255,255,.014);border:1px solid rgba(255,255,255,.075);color:var(--tx2);font-family:'DM Mono',monospace;font-size:9px;padding:5px 7px;border-radius:6px;width:64px;text-align:center;}
 .pr-edit-inp:focus{outline:none;border-color:var(--acc);}
-.pr-edit-btn{background:transparent;color:var(--tx2);border:1px solid var(--bor);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1px;padding:6px 11px;border-radius:4px;cursor:pointer;flex-shrink:0;}
+.pr-edit-btn{background:transparent;color:var(--tx2);border:1px solid rgba(255,255,255,.075);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.8px;padding:6px 10px;border-radius:6px;cursor:pointer;flex-shrink:0;}
 .pr-edit-btn:active{opacity:.8;}
 .pr-del-btn{background:none;border:1px solid var(--bor);color:var(--mu);font-size:10px;padding:7px 9px;border-radius:4px;cursor:pointer;flex-shrink:0;}
 .pr-spark-toggle{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--bor);border-radius:6px;color:var(--mu);cursor:pointer;flex-shrink:0;opacity:.9;transition:background .16s ease,border-color .16s ease,color .16s ease,transform .08s ease;}
@@ -974,18 +977,20 @@ main{padding:14px;max-width:860px;}
   .pr-primary{font-size:21px;}
   .weekly-v,.pr-insight-v{font-size:24px;}
   .pr-insight-v{font-size:18px;}
-  .pr-filter-row{gap:8px;margin-bottom:14px;}
-  .pr-filter-chip{padding:8px 11px;}
-  .pr-group-body.open{grid-template-columns:1fr;gap:10px;}
-  .pr-card{padding:16px;margin-bottom:10px;min-height:150px;}
+  .pr-filter-row{gap:7px;margin-bottom:12px;}
+  .pr-filter-chip{padding:8px 10px;}
+  .pr-group-title{font-size:15px;margin-bottom:8px;}
+  .pr-group-body.open{grid-template-columns:1fr;gap:10px;margin-bottom:20px;}
+  .pr-card{padding:14px;margin-bottom:9px;min-height:0;}
   .pr-card-top{gap:9px;}
   .pr-value-wrap{min-width:78px;}
   .pr-ex-name{font-size:14px;line-height:1.45;}
   .pr-badge{font-size:30px;}
   .pr-card.tier-1.has-pr .pr-badge{font-size:34px;}
   .pr-set-line{font-size:10px;}
-  .pr-card-meta-row{gap:7px;margin:9px 0 11px;}
-  .pr-edit-row{flex-wrap:wrap;gap:6px;opacity:.86;}
+  .pr-card-meta-row{gap:7px;margin:8px 0 10px;}
+  .pr-empty-state{font-size:9px;padding:7px 8px;margin:8px 0 9px;}
+  .pr-edit-row{flex-wrap:wrap;gap:6px;opacity:.62;}
   .pr-override-label{width:100%;margin-right:0;}
   .pr-edit-inp{width:68px;}
   .prog-tab-section{margin-bottom:26px;}
@@ -5754,14 +5759,14 @@ function buildPrInsightSummary(){
   const headline=records.length ? 'PR Übersicht' : 'Leistungsübersicht';
   const subline=records.length
     ? (strongest?('Stärkster Lift: '+strongest.name.split('(')[0].trim()+' · '+strongest.orm+' kg'):'PRs vorhanden')
-    : 'Erst nach echten Bestleistungen ausfüllen.';
+    : 'Noch keine PR-Daten erfasst. Werte erscheinen nach echten Bestleistungen.';
   return '<div class="pr-insight">'
     +'<div class="pr-primary">'+headline+'</div>'
     +'<div class="pr-sub">'+subline+'</div>'
     +'<div class="pr-insight-grid">'
-    +'<div class="pr-insight-kv"><div class="pr-insight-k">Stärkster Lift</div><div class="pr-insight-v good">'+(strongest?strongest.orm+' kg':'—')+'</div></div>'
-    +'<div class="pr-insight-kv"><div class="pr-insight-k">Größter Fortschritt</div><div class="pr-insight-v '+(bestProgress?'good':'')+'">'+(bestProgress?bestProgress.signal.text:'—')+'</div></div>'
-    +'<div class="pr-insight-kv"><div class="pr-insight-k">Letzter PR</div><div class="pr-insight-v">'+(latest?formatPRDateForDisplay(latest.date):'—')+'</div></div>'
+    +'<div class="pr-insight-kv"><div class="pr-insight-k">Stärkster Lift</div><div class="pr-insight-v good">'+(strongest?strongest.orm+' kg':'Noch keine Daten')+'</div></div>'
+    +'<div class="pr-insight-kv"><div class="pr-insight-k">Größter Fortschritt</div><div class="pr-insight-v '+(bestProgress?'good':'')+'">'+(bestProgress?bestProgress.signal.text:'Noch keine Steigerung in diesem Zyklus')+'</div></div>'
+    +'<div class="pr-insight-kv"><div class="pr-insight-k">Letzter PR</div><div class="pr-insight-v">'+(latest?formatPRDateForDisplay(latest.date):'Noch kein neuer PR diese Woche')+'</div></div>'
     +'<div class="pr-insight-kv"><div class="pr-insight-k">Neu diese Woche</div><div class="pr-insight-v">'+newThisWeek+'</div></div>'
     +'</div></div>';
   const line=records.length
@@ -5797,7 +5802,9 @@ function renderRecords() {
   const prCount = allPRs.length;
   const currentWeekDates=new Set((PLAN[C]?.weeks[W]?.days||[]).map(d=>d.date));
   const newThisWeek=allPRs.filter(k=>currentWeekDates.has(String((store[k]||{}).date||''))).length;
-  if (summary) summary.textContent = prCount + ' PR' + (prCount !== 1 ? 's' : '') + ' · '+newThisWeek+' neu diese Woche';
+  if (summary) summary.textContent = prCount
+    ? prCount + ' PR' + (prCount !== 1 ? 's' : '') + ' · '+newThisWeek+' neu diese Woche'
+    : 'Noch keine PRs erfasst';
 
   // Hall of Fame Podium
   let hofHtml='';
@@ -5896,7 +5903,7 @@ function renderRecords() {
     const gid = 'prg_' + gi;
     const badge = groupPRCount > 0
       ? '<span class="pr-count-badge">'+groupPRCount+'/'+visibleGroupTotal+'</span>'
-      : '<span style="color:var(--mu)">'+visibleGroupTotal+'</span>';
+      : '<span class="pr-count-badge empty">0/'+visibleGroupTotal+'</span>';
 
     html += '<div class="pr-group-title '+tierCls+'" id="'+gid+'_hdr" onclick="togglePRGroup(\''+gid+'\')">'
       + '<span>'+group.label+'</span>'
@@ -5941,7 +5948,7 @@ function renderRecords() {
       if (hasPR) {
         html += '<div class="pr-value-wrap"><div class="pr-badge">'+rec.orm+'<span class="pr-badge-unit">kg</span></div><div class="pr-value-label">Bester 1RM</div>'+setLine+'</div>';
       } else {
-        html += '<div class="pr-value-wrap"><div class="pr-badge no-pr">—</div><div class="pr-value-label">offen</div></div>';
+        html += '<div class="pr-value-wrap"><div class="pr-badge no-pr">Noch kein PR</div><div class="pr-value-label">offen</div></div>';
       }
       html += '</div>';
       if(hasPR){
@@ -5952,9 +5959,11 @@ function renderRecords() {
           +(hist.length>=2?'<button class="pr-spark-toggle" type="button" aria-label="1RM Verlauf anzeigen" title="1RM Verlauf" onclick="event.stopPropagation();document.getElementById(\''+sparkId+'\').classList.toggle(\'open\')"><svg viewBox="0 0 24 24"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg></button>':'')
           +'</div>';
         html += '<div class="pr-spark-wrap" id="'+sparkId+'">'+buildPRSparkline(hist)+'</div>';
+      } else {
+        html += '<div class="pr-empty-state"><b>Noch keine Daten</b>Erster sauberer PR wird hier angezeigt.</div>';
       }
       html += '<div class="pr-edit-row">'
-        +'<span class="pr-override-label">Manuelle Korrektur</span>'
+        +'<span class="pr-override-label">Korrektur</span>'
         +'<input class="pr-edit-inp" type="number" id="pr_inp_'+safeId+'" placeholder="kg" step="0.5" min="0" value="'+(hasPR?rec.orm:'')+'">'
         +'<button class="pr-edit-btn" onclick="savePRManual(\''+exName.replace(/'/g,"\\'")+'\')">Speichern</button>'
         +(hasPR?'<button class="pr-del-btn" onclick="deletePR(\''+exName.replace(/'/g,"\\'")+'\')">✕</button>':'')
