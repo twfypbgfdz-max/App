@@ -478,20 +478,25 @@ main{padding:14px;max-width:860px;}
 .sc-close:hover{opacity:1;}
 /* END SELF-CHECK */
 /* KI-TAB */
-.ki-model-btn{font-family:'DM Mono',monospace;font-size:9px;padding:6px 12px;border:1px solid var(--bor);background:var(--sur);color:var(--mu);border-radius:var(--r);cursor:pointer;transition:all .2s;flex:1;}
+.ki-model-btn{font-family:'DM Mono',monospace;font-size:9.5px;padding:7px 12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:var(--tx2);border-radius:var(--r);cursor:pointer;transition:all .2s;flex:1;}
 .ki-model-btn.active{border-color:var(--acc);color:var(--acc);background:rgba(200,255,0,.06);}
 .ki-model-btn:active{opacity:.7;}
-.ki-groq-panel{display:none;border:1px solid var(--bor);background:var(--sur2);border-radius:var(--r);padding:10px 12px;margin:-4px 0 12px;font-family:'DM Mono',monospace;font-size:9px;color:var(--tx2);line-height:1.55;}
+.ki-groq-panel{display:none;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);border-radius:var(--r);padding:10px 12px;margin:-2px 0 10px;font-family:'DM Mono',monospace;font-size:9.5px;color:var(--tx2);line-height:1.55;}
 .ki-groq-panel.show{display:block;}
 .ki-groq-panel b{display:block;color:var(--acc);font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;margin-bottom:4px;}
 .ki-groq-panel .ai-key-input{margin-top:8px;}
 .ki-groq-panel .status{margin-top:8px;}
-#kiChatBox{display:flex;flex-direction:column;gap:10px;min-height:120px;margin-bottom:12px;max-height:55vh;overflow-y:auto;padding-bottom:4px;}
+#kiChatBox{display:flex;flex-direction:column;gap:9px;min-height:96px;margin-bottom:10px;max-height:55vh;overflow-y:auto;padding-bottom:4px;}
 .ki-msg{padding:10px 13px;border-radius:var(--r);font-size:12px;line-height:1.6;max-width:92%;}
 .ki-msg.user{background:var(--sur2);border:1px solid var(--bor);color:var(--tx);align-self:flex-end;font-family:'DM Mono',monospace;font-size:10px;}
 .ki-msg.ai{background:var(--sur);border:1px solid var(--bor2);color:var(--tx);align-self:flex-start;}
 .ki-msg.ai .ki-label{font-family:'DM Mono',monospace;font-size:7px;color:var(--acc);text-transform:uppercase;letter-spacing:2px;margin-bottom:5px;}
 .ki-msg.loading{background:var(--sur);border:1px solid var(--bor);align-self:flex-start;display:flex;align-items:center;gap:8px;color:var(--mu);font-size:11px;}
+.ki-empty{border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,rgba(255,255,255,.022),var(--sur));border-radius:var(--r);padding:12px;display:grid;gap:9px;}
+.ki-empty-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:1px;color:var(--tx);line-height:1;}
+.ki-empty-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--tx2);line-height:1.5;}
+.ki-prompt-row{display:grid;gap:6px;}
+.ki-prompt-chip{font-family:'DM Mono',monospace;font-size:9.5px;line-height:1.35;color:var(--tx2);border:1px solid rgba(255,255,255,.075);background:rgba(255,255,255,.022);border-radius:var(--r);padding:7px 9px;}
 .ki-input-wrap{display:flex;gap:8px;align-items:flex-end;}
 .ki-textarea{flex:1;background:var(--sur2);border:1px solid var(--bor);color:var(--tx);font-family:'DM Mono',monospace;font-size:11px;padding:10px 12px;border-radius:var(--r);resize:none;line-height:1.5;}
 .ki-textarea:focus{outline:none;border-color:var(--acc);}
@@ -844,19 +849,19 @@ main{padding:14px;max-width:860px;}
 .tab-hd-pb{padding:4px 0 12px;}
 .tab-h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:1px;margin:0;}
 .prog-cycle-badge{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--mu);}
-.ki-model-badge{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--mu);}
-.ki-btn-row{display:flex;gap:6px;margin-bottom:12px;}
+.ki-model-badge{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--tx2);}
+.ki-btn-row{display:flex;gap:6px;margin-bottom:10px;}
 .ki-footer-note{font-family:'DM Mono',monospace;font-size:8.5px;color:var(--mu);margin-top:6px;text-align:center;}
 .sync-reload-btn{width:100%;margin:8px 0 6px;}
 /* KI ANALYSE ENGINE */
-.ki-auto-panel{background:var(--sur2);border:1px solid var(--bor);border-radius:var(--r);margin-bottom:12px;overflow:hidden;}
-.ki-auto-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--bor);}
-.ki-auto-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;}
-.ki-auto-run-btn{font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:2px;background:var(--acc);color:#000;border:none;padding:5px 14px;border-radius:4px;cursor:pointer;font-weight:700;}
+.ki-auto-panel{background:linear-gradient(180deg,rgba(255,255,255,.024),var(--sur));border:1px solid rgba(255,255,255,.08);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.ki-auto-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;border-bottom:1px solid rgba(255,255,255,.07);}
+.ki-auto-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:1.4px;color:var(--tx2);text-transform:uppercase;}
+.ki-auto-run-btn{font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;background:var(--acc);color:#000;border:none;padding:7px 14px;border-radius:var(--r);cursor:pointer;font-weight:700;white-space:nowrap;box-shadow:0 0 0 1px rgba(200,255,0,.12);}
 .ki-auto-run-btn:disabled{opacity:.5;cursor:not-allowed;}
 .ki-auto-run-btn:active{opacity:.8;}
-.ki-auto-body{padding:12px;}
-.ki-auto-idle{font-family:'DM Mono',monospace;font-size:9px;color:var(--mu);text-align:center;padding:12px 0;}
+.ki-auto-body{padding:11px;}
+.ki-auto-idle{font-family:'DM Mono',monospace;font-size:10px;color:var(--tx2);text-align:left;padding:3px 0;line-height:1.5;}
 .ki-finding{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--bor2);}
 .ki-finding:last-child{border-bottom:none;}
 .ki-finding-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
@@ -865,7 +870,7 @@ main{padding:14px;max-width:860px;}
 .ki-finding.watch .ki-finding-text b,.ki-finding.warn .ki-finding-text b{color:var(--warn);}
 .ki-finding.good .ki-finding-text b,.ki-finding.ok .ki-finding-text b{color:var(--ok);}
 .ki-finding.warning .ki-finding-text b,.ki-finding.alert .ki-finding-text b{color:var(--acc2);}
-.ki-chat-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--mu);text-transform:uppercase;margin:12px 0 6px;}
+.ki-chat-label{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:1.4px;color:var(--tx2);text-transform:uppercase;margin:10px 0 6px;}
 
 .save-spin-wrap{display:none;}
 .last-sync-txt{margin-left:8px;font-size:8.5px;color:var(--mu);}
@@ -1032,6 +1037,15 @@ main{padding:14px;max-width:860px;}
   .prog-vol-bar-hd{gap:8px;align-items:flex-start;}
   .prog-vol-bar-lbl{line-height:1.35;overflow-wrap:anywhere;}
   .mheat-disbalance{font-size:10px;line-height:1.45;}
+  .ki-auto-hd{align-items:flex-start;padding:9px 10px;}
+  .ki-auto-run-btn{padding:7px 11px;font-size:14px;}
+  .ki-auto-body{padding:10px;}
+  #kiChatBox{min-height:86px;margin-bottom:9px;}
+  .ki-empty{padding:11px;gap:8px;}
+  .ki-empty-title{font-size:19px;}
+  .ki-input-wrap{gap:7px;}
+  .ki-textarea{font-size:10.5px;padding:9px 10px;}
+  .ki-send-btn{padding:10px 12px;}
 }
 .mheat-val{font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:1px;line-height:1;}
 .mheat-sub{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--tx2);margin-top:5px;line-height:1.35;}
@@ -1259,7 +1273,7 @@ main{padding:14px;max-width:860px;}
       <button class="ki-auto-run-btn" id="kiAutoRunBtn" onclick="runAutoAnalysis()">▶ Analyse starten</button>
     </div>
     <div class="ki-auto-body" id="kiAutoBody">
-      <div class="ki-auto-idle">▶ Analyse starten: Trainingsfeedback, nächste Empfehlung und Schwachstellen erkennen. Lokal ohne API-Key.</div>
+      <div class="ki-auto-idle">Starte mit dem lokalen Trainingscheck. Feedback, nächste Empfehlung und auffällige Schwachstellen erscheinen direkt hier.</div>
     </div>
   </div>
 
@@ -6145,7 +6159,15 @@ function renderKiChat() {
   const box = document.getElementById('kiChatBox');
   if (!box) return;
   if (kiHistory.length === 0) {
-    box.innerHTML = '<div class="ki-empty">Noch kein Gespräch — stell eine Frage!</div>';
+    box.innerHTML = '<div class="ki-empty">'
+      +'<div class="ki-empty-title">Noch keine Rückfrage</div>'
+      +'<div class="ki-empty-sub">Starte zuerst die Analyse oder stelle danach eine kurze Frage zum heutigen Training.</div>'
+      +'<div class="ki-prompt-row">'
+      +'<div class="ki-prompt-chip">Was ist heute die wichtigste Anpassung?</div>'
+      +'<div class="ki-prompt-chip">Welche Übung sollte ich beobachten?</div>'
+      +'<div class="ki-prompt-chip">Ist die Belastung für diese Woche passend?</div>'
+      +'</div>'
+      +'</div>';
     return;
   }
   box.innerHTML = kiHistory.map(m => {
