@@ -263,6 +263,12 @@ main{padding:14px;max-width:860px;}
 .excard.open-ex{border-color:rgba(200,255,0,.34);background:linear-gradient(180deg,rgba(200,255,0,.04),var(--sur));box-shadow:0 0 0 1px rgba(200,255,0,.08),0 8px 18px rgba(0,0,0,.14);}
 .excard.open-ex::before{background:var(--acc);width:4px;}
 [data-theme="light"] .excard.open-ex::before{background:#111;}
+.excard.active-ex:not(.stagnation-card){border-color:rgba(200,255,0,.5);background:linear-gradient(180deg,rgba(200,255,0,.055),var(--sur));box-shadow:0 0 0 1px rgba(200,255,0,.16),0 10px 22px rgba(0,0,0,.18);}
+.excard.active-ex::before{background:var(--acc);width:5px;}
+[data-theme="light"] .excard.active-ex:not(.stagnation-card){border-color:#111;box-shadow:0 0 0 1px rgba(0,0,0,.12),0 8px 18px rgba(0,0,0,.1);}
+[data-theme="light"] .excard.active-ex::before{background:#111;}
+.active-badge{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:.8px;text-transform:uppercase;color:#111;background:var(--acc);border:1px solid rgba(200,255,0,.5);border-radius:999px;padding:3px 7px;white-space:nowrap;font-weight:700;}
+[data-theme="light"] .active-badge{color:#fff;background:#111;border-color:#111;}
 .excard.pr-card::after{
   content:'🏆 PR';position:absolute;top:8px;right:8px;
   background:var(--acc);color:#000;font-family:'DM Mono',monospace;
@@ -984,10 +990,12 @@ main{padding:14px;max-width:860px;}
   .excard{margin-bottom:7px;border-radius:8px;}
   .excard.done{opacity:.86;}
   .excard.open-ex{box-shadow:0 0 0 1px rgba(200,255,0,.14),0 7px 16px rgba(0,0,0,.14);}
+  .excard.active-ex:not(.stagnation-card){box-shadow:0 0 0 1px rgba(200,255,0,.18),0 8px 18px rgba(0,0,0,.14);}
   .exhead{padding:10px 10px 10px 15px;gap:8px;}
   .exname{font-size:13.5px;line-height:1.38;}
   .exmeta{gap:5px;max-width:42%;}
   .exstatus{font-size:9px;}
+  .active-badge{font-size:7px;padding:3px 6px;letter-spacing:.6px;}
   .prev-badge,.prog-arrow{font-size:8.5px;padding:3px 6px;}
   .exbody.open{padding:8px 9px 11px 15px;}
   .exercise-focus-bar{padding:5px 7px;margin-bottom:6px;align-items:flex-start;}
@@ -3396,6 +3404,7 @@ function renderWorkout(){
     const d=getD(C,W,D,i);
     const orm=calc1RM(d);
     const isOpen=(i===0&&!d.done);
+    const isActiveExercise=(i===nextExerciseIndex&&!d.done);
     const exName=getExName(i);
     const rec=getRecord(exName);
     const isPR=orm&&rec&&orm>rec.orm;
@@ -3480,13 +3489,14 @@ function renderWorkout(){
       return 'set-row-empty';
     };
 
-    html+='<div class="excard '+(d.done?'done ':'')+( isOpen?'open-ex ':'')+( isPR?'pr-card':'')+( isStag?'stagnation-card':'')+'" id="ec'+i+'">'
+    html+='<div class="excard '+(d.done?'done ':'')+( isOpen?'open-ex ':'')+(isActiveExercise?'active-ex ':'')+( isPR?'pr-card':'')+( isStag?'stagnation-card':'')+'" id="ec'+i+'">'
       +'<div class="exhead" onclick="toggleEx('+i+')">'
       +'<div class="exname">'+(i+1)+'. <span id="exlabel'+i+'" onclick="event.stopPropagation();editExName('+i+')" class="exname-editable" title="Tippen zum Umbenennen">'+exName+'</span>'
       +'<button class="hist-btn" onclick="event.stopPropagation();showHistory('+i+')" title="Verlauf">📊</button>'
       +'<button class="hist-btn" onclick="event.stopPropagation();openSwap('+i+')" title="Übung tauschen">⇄</button>'
       +'</div>'
       +'<div class="exmeta">'
+      +(isActiveExercise?'<span class="active-badge">NÄCHSTE ÜBUNG</span>':'')
       +(progArrow?'<span class="prog-arrow '+progClass+'">'+progArrow+' '+progDiff+' kg</span>':'')
       +(prevOrm&&!progArrow?'<span class="prev-badge">'+prevOrm+' kg</span>':'')
       +'<div class="exstatus">'+(d.done?'✓':orm?orm+' kg 1RM':'—')+'</div>'
