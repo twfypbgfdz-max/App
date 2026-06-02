@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4-test
+
+- Neue Testversion `ai-router-v0_4-test.html` angelegt.
+- Entscheidungsverlauf mit Datum, Projektmodus, Arbeitsmodus, Aufgabe, Empfehlung, Vertrauen, Risiko und Workflow in `localStorage` ergaenzt.
+- Bewertungssystem fuer Verlaufseintraege mit Gut, Mittel und Schlecht eingebaut.
+- KI-Auswertung mit Empfehlungszaehlung, Durchschnittsbewertung und bester KI laut Bewertungen ergaenzt.
+- Lernbasis mit empfohlener KI und Nutzerbewertung vorbereitet.
+- Datenverwaltung fuer Verlauf loeschen und Statistik zuruecksetzen mit Sicherheitsabfrage ergaenzt.
+
 ## v0.3-test
 
 - Neue Testversion `ai-router-v0_3-test.html` angelegt.
