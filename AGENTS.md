@@ -1,5 +1,7 @@
 \# Arbeitsregeln für Codex
 
+Zentrale Repo-Dokumentation: `00_PROJEKT_DOKU/REPO_STRUKTUR.md`
+
 
 
 \## Grundregel
