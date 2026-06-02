@@ -63,6 +63,10 @@ Wenn sie nicht uebereinstimmen: STOP, zuerst Versionen synchronisieren.
 Aktive Entwicklung findet nur unter `01_PERSONAL_APP/tests/` statt.
 Dateien in `01_PERSONAL_APP/backups/` sind nur Sicherungen und duerfen nicht als Arbeitsdatei weiterentwickelt werden.
 
+Versionsregister und aktuelle Basis muessen bei Versionswechseln gepflegt werden:
+\- `00_PROJEKT_DOKU/VERSIONSREGISTER.md`
+\- `01_PERSONAL_APP/README_CURRENT_VERSION.md`
+
 
 
 \## Nach jedem Patch berichten
