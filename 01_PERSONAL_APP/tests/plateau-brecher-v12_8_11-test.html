@@ -162,6 +162,13 @@ main{padding:14px;max-width:860px;}
 .excard.stagnation-card .exname::after{content:' ⚠';color:#ff4444;font-size:11px;}
 .load-suggest{font-family:'DM Mono',monospace;font-size:9px;color:var(--acc3);background:rgba(0,212,255,.035);border:1px solid rgba(0,212,255,.13);border-radius:var(--r);padding:5px 8px;margin-bottom:6px;line-height:1.35;}
 .load-suggest b{color:var(--acc3);}
+.last-training-box{font-family:'DM Mono',monospace;font-size:9px;line-height:1.45;color:var(--tx2);background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.07);border-left:3px solid rgba(0,212,255,.22);border-radius:var(--r);padding:6px 8px;margin-bottom:6px;}
+.last-training-head{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--mu);letter-spacing:.7px;text-transform:uppercase;font-size:8px;margin-bottom:4px;}
+.last-training-date{color:var(--tx2);letter-spacing:0;text-transform:none;white-space:nowrap;}
+.last-training-sets{display:flex;flex-wrap:wrap;gap:5px;}
+.last-training-set{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:3px 7px;color:var(--tx);}
+.last-training-note{margin-top:5px;color:var(--mu);overflow-wrap:anywhere;}
+.last-training-note b{color:var(--tx2);font-weight:500;}
 .coach-rec{font-family:'DM Mono',monospace;font-size:9px;color:var(--tx2);background:rgba(200,255,0,.025);border:1px solid rgba(200,255,0,.1);border-radius:var(--r);padding:5px 8px;margin-bottom:6px;line-height:1.38;}
 .coach-rec b{color:var(--acc);}
 .coach-rec.warn{background:rgba(255,171,0,.07);border-color:rgba(255,171,0,.22);}
@@ -996,6 +1003,10 @@ main{padding:14px;max-width:860px;}
   .sinput::placeholder{font-size:10px;}
   .orm-inline{font-size:8px;min-width:0;padding:3px 5px;color:var(--tx2);background:rgba(255,255,255,.035);}
   .prev-session-line{font-size:9px;padding:5px 8px;margin:5px 0 6px;}
+  .last-training-box{font-size:8.5px;padding:6px 7px;margin-bottom:6px;}
+  .last-training-head{font-size:7.5px;align-items:flex-start;}
+  .last-training-sets{gap:4px;}
+  .last-training-set{padding:3px 6px;}
   .quick-apply-btn{display:inline-flex;margin-left:0;margin-top:5px;font-size:8px;padding:4px 7px;}
   .warmup-toggle{font-size:8px;padding:5px 0;}
   .coach-rec,.load-suggest{font-size:9px;padding:5px 8px;margin-bottom:6px;}
@@ -3283,6 +3294,26 @@ function getVisibleSetCountForExercise(i){
 function hasExerciseSetData(d){
   return ['g1','r1','g2','r2','g3','r3'].some(k=>String(d?.[k]||'').trim()!=='');
 }
+function escHtml(v){
+  return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function renderLastTrainingBox(prevEntry){
+  const data=prevEntry?.data;
+  if(!data)return '';
+  const sets=[['g1','r1'],['g2','r2'],['g3','r3']]
+    .map(([g,r],idx)=>({idx:idx+1,g:String(data[g]||'').trim(),r:String(data[r]||'').trim()}))
+    .filter(s=>s.g||s.r);
+  if(!sets.length)return '';
+  const date=prevEntry?.date||PLAN[prevEntry.c]?.weeks?.[prevEntry.w]?.days?.[prevEntry.d]?.date||'';
+  const note=String(data.notes||'').trim();
+  return '<div class="last-training-box">'
+    +'<div class="last-training-head"><span>Letztes Mal</span><span class="last-training-date">'+escHtml(date)+'</span></div>'
+    +'<div class="last-training-sets">'
+    +sets.map(s=>'<span class="last-training-set">S'+s.idx+' '+escHtml(s.g||'—')+' kg × '+escHtml(s.r||'—')+'</span>').join('')
+    +'</div>'
+    +(note?'<div class="last-training-note"><b>Notiz:</b> '+escHtml(note)+'</div>':'')
+    +'</div>';
+}
 function renderWorkout(){
   const week=PLAN[C].weeks[W],day=week.days[D];
   requestSheetHistoryForDeload();
@@ -3379,9 +3410,7 @@ function renderWorkout(){
       if(prevEntry.orm>0)prevOrm=prevEntry.orm;
       if(prevEntry.g1)prevG=prevEntry.g1;
     }
-    const prevSetLine=(prevData&&prevData.g1&&prevData.r1)
-      ? '<div class="prev-session-line">Letztes Mal: <b>'+prevData.g1+' kg × '+prevData.r1+'</b>'+(prevOrm?' · 1RM '+prevOrm+' kg':'')+'<button class="quick-apply-btn" onclick="event.stopPropagation();applyPreviousSet('+i+')">Wie letztes Mal</button></div>'
-      : '';
+    const lastTrainingBox=renderLastTrainingBox(prevEntry);
 
     const machineValue=getMachineValue(d);
     const machineRow='<div class="machine-row"><span class="machine-lbl">Ger&auml;t</span><select class="machine-select" onchange="upd('+i+',\'machine\',this.value)">'+renderMachineOptions(machineValue)+'</select></div>';
@@ -3474,7 +3503,7 @@ function renderWorkout(){
       +'</div></div>'
       +loadSuggest
       +coachRecHtml
-      +prevSetLine
+      +lastTrainingBox
       +machineRow
       +machineWarning
       +focusBar
