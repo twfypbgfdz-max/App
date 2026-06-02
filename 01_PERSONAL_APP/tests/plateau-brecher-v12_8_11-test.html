@@ -169,6 +169,12 @@ main{padding:14px;max-width:860px;}
 .last-training-set{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:3px 7px;color:var(--tx);}
 .last-training-note{margin-top:5px;color:var(--mu);overflow-wrap:anywhere;}
 .last-training-note b{color:var(--tx2);font-weight:500;}
+.set-history-box{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.45;color:var(--tx2);background:rgba(255,255,255,.012);border:1px solid rgba(255,255,255,.055);border-radius:var(--r);padding:6px 8px;margin-bottom:6px;}
+.set-history-title{color:var(--mu);letter-spacing:.7px;text-transform:uppercase;font-size:8px;margin-bottom:4px;}
+.set-history-list{display:grid;gap:3px;}
+.set-history-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:7px;align-items:center;}
+.set-history-date{color:var(--mu);white-space:nowrap;}
+.set-history-main{color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .coach-rec{font-family:'DM Mono',monospace;font-size:9px;color:var(--tx2);background:rgba(200,255,0,.025);border:1px solid rgba(200,255,0,.1);border-radius:var(--r);padding:5px 8px;margin-bottom:6px;line-height:1.38;}
 .coach-rec b{color:var(--acc);}
 .coach-rec.warn{background:rgba(255,171,0,.07);border-color:rgba(255,171,0,.22);}
@@ -1015,6 +1021,8 @@ main{padding:14px;max-width:860px;}
   .last-training-head{font-size:7.5px;align-items:flex-start;}
   .last-training-sets{gap:4px;}
   .last-training-set{padding:3px 6px;}
+  .set-history-box{font-size:8px;padding:6px 7px;}
+  .set-history-row{grid-template-columns:38px minmax(0,1fr);gap:6px;}
   .quick-apply-btn{display:inline-flex;margin-left:0;margin-top:5px;font-size:8px;padding:4px 7px;}
   .warmup-toggle{font-size:8px;padding:5px 0;}
   .coach-rec,.load-suggest{font-size:9px;padding:5px 8px;margin-bottom:6px;}
@@ -3322,6 +3330,50 @@ function renderLastTrainingBox(prevEntry){
     +(note?'<div class="last-training-note"><b>Notiz:</b> '+escHtml(note)+'</div>':'')
     +'</div>';
 }
+function collectExerciseSetHistory(exName,limit=4){
+  const wanted=normExLookupName(exName);
+  const rows=[];
+  if(!wanted)return rows;
+  for(let c=C;c>=0&&rows.length<limit;c--){
+    const weeks=PLAN[c]?.weeks||[];
+    const wStart=(c===C)?W:weeks.length-1;
+    for(let w=wStart;w>=0&&rows.length<limit;w--){
+      const week=weeks[w];
+      if(!week||week.isDeload)continue;
+      const days=week.days||[];
+      const dStart=(c===C&&w===W)?D-1:days.length-1;
+      for(let d=dStart;d>=0&&rows.length<limit;d--){
+        if(d<0)continue;
+        const day=days[d];
+        if(!day)continue;
+        for(let i=0;i<(day.exercises||[]).length;i++){
+          const histName=getHistoricalExName(c,w,d,i);
+          if(normExLookupName(histName)!==wanted)continue;
+          const data=getD(c,w,d,i);
+          if(!data||(!data.g1&&!data.r1))continue;
+          rows.push({date:day.date||'?',data});
+          break;
+        }
+      }
+    }
+  }
+  return rows;
+}
+function renderSetHistoryBox(exName){
+  const rows=collectExerciseSetHistory(exName,4);
+  if(!rows.length)return '';
+  return '<div class="set-history-box">'
+    +'<div class="set-history-title">Verlauf</div>'
+    +'<div class="set-history-list">'
+    +rows.map(r=>{
+      const d=r.data||{};
+      const first=(String(d.g1||'').trim()||'—')+' kg × '+(String(d.r1||'').trim()||'—');
+      const second=(d.g2&&d.r2)?' · S2 '+d.g2+'×'+d.r2:'';
+      const third=(d.g3&&d.r3)?' · S3 '+d.g3+'×'+d.r3:'';
+      return '<div class="set-history-row"><span class="set-history-date">'+escHtml(r.date)+'</span><span class="set-history-main">'+escHtml(first+second+third)+'</span></div>';
+    }).join('')
+    +'</div></div>';
+}
 function renderWorkout(){
   const week=PLAN[C].weeks[W],day=week.days[D];
   requestSheetHistoryForDeload();
@@ -3420,6 +3472,7 @@ function renderWorkout(){
       if(prevEntry.g1)prevG=prevEntry.g1;
     }
     const lastTrainingBox=renderLastTrainingBox(prevEntry);
+    const setHistoryBox=renderSetHistoryBox(exName);
 
     const machineValue=getMachineValue(d);
     const machineRow='<div class="machine-row"><span class="machine-lbl">Ger&auml;t</span><select class="machine-select" onchange="upd('+i+',\'machine\',this.value)">'+renderMachineOptions(machineValue)+'</select></div>';
@@ -3514,6 +3567,7 @@ function renderWorkout(){
       +loadSuggest
       +coachRecHtml
       +lastTrainingBox
+      +setHistoryBox
       +machineRow
       +machineWarning
       +focusBar
