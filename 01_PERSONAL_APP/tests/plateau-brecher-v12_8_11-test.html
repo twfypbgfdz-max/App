@@ -380,6 +380,8 @@ main{padding:14px;max-width:860px;}
 .machine-select{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.08);color:var(--tx2);font-family:'DM Mono',monospace;font-size:10px;padding:8px 10px;min-height:36px;flex:1;min-width:150px;outline:none;border-radius:var(--r);transition:border-color .15s,background .15s,color .15s;}
 .machine-select:focus{border-color:var(--bor2);background:var(--sur2);color:var(--tx);}
 .machine-warning{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.45;color:var(--warn);background:rgba(255,171,0,.045);border:1px solid rgba(255,171,0,.13);border-radius:var(--r);padding:7px 9px;margin:-1px 0 7px;}
+.machine-pr-line{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.45;color:var(--tx2);background:rgba(200,255,0,.018);border:1px solid rgba(200,255,0,.09);border-radius:var(--r);padding:6px 8px;margin-bottom:6px;}
+.machine-pr-line b{color:var(--acc);font-weight:700;}
 
 .done-btn{
   background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.08);color:var(--tx2);
@@ -1779,6 +1781,35 @@ function getBestSetFromTrainingData(d){
   });
   return best;
 }
+function getMachinePRFromLocalHistory(exName,machine){
+  const wanted=normExLookupName(exName);
+  if(!wanted)return null;
+  let best=null;
+  for(let c=0;c<PLAN.length;c++){
+    const weeks=PLAN[c]?.weeks||[];
+    for(let w=0;w<weeks.length;w++){
+      const week=weeks[w];
+      if(!week||week.isDeload)continue;
+      const days=week.days||[];
+      for(let d=0;d<days.length;d++){
+        const day=days[d];
+        for(let i=0;i<(day?.exercises||[]).length;i++){
+          const histName=getHistoricalExName(c,w,d,i);
+          if(normExLookupName(histName)!==wanted)continue;
+          const data=getD(c,w,d,i);
+          if(!machineMatchesEntry(data,machine))continue;
+          const set=getBestSetFromTrainingData(data);
+          const orm=calc1RM(data);
+          if(!set||!orm)continue;
+          if(!best||orm>best.orm||(orm===best.orm&&set.weight>best.weight)){
+            best={weight:set.weight,reps:set.reps,orm,date:day?.date||'',machine:getMachineValue(data)};
+          }
+        }
+      }
+    }
+  }
+  return best;
+}
 function setRecord(n,o,d,w,reps,source){
   const prev=getRecord(n)||{};
   store['rec_'+n]={...prev,orm:Math.round(o*10)/10,date:d,weight:w||null,reps:reps||null,source:source||prev.source||'local'};
@@ -3028,6 +3059,14 @@ function updateSetProgressUI(idx){
     });
   }
 }
+function updateMachinePRUI(idx){
+  const el=document.getElementById('machinePr_'+idx);
+  if(!el)return;
+  const d=getD(C,W,D,idx);
+  const machineValue=getMachineValue(d);
+  const machinePr=getMachinePRFromLocalHistory(getExName(idx),machineValue);
+  el.outerHTML=renderMachinePRLine(machinePr,machineValue,idx);
+}
 
 function getRecommendationDataBasis(exName,machine){
   const wanted=normExLookupName(exName);
@@ -3351,6 +3390,12 @@ function hasExerciseSetData(d){
 function escHtml(v){
   return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 }
+function renderMachinePRLine(machinePr,machine,idx){
+  const label=escHtml(getMachineValue({machine}));
+  const id='machinePr_'+idx;
+  if(!machinePr)return '<div class="machine-pr-line" id="'+id+'">Noch kein Ger&auml;te-PR f&uuml;r '+label+'</div>';
+  return '<div class="machine-pr-line" id="'+id+'">Ger&auml;te-PR '+label+': <b>'+escHtml(machinePr.weight)+' kg &times; '+escHtml(machinePr.reps)+'</b></div>';
+}
 function renderLastTrainingBox(prevEntry,machine){
   const data=prevEntry?.data;
   if(!data){
@@ -3526,6 +3571,7 @@ function renderWorkout(){
 
     const machineRow='<div class="machine-row"><span class="machine-lbl">Ger&auml;t</span><select class="machine-select" onchange="upd('+i+',\'machine\',this.value)">'+renderMachineOptions(machineValue)+'</select></div>';
     const machineWarning=buildMachineWarning(machineValue,prevData);
+    const machinePrLine=renderMachinePRLine(getMachinePRFromLocalHistory(exName,machineValue),machineValue,i);
 
     // Progressionspfeil — nur wenn aktuelle Session Daten hat UND Vorwoche vorhanden
     let progArrow='',progClass='flat',progDiff='';
@@ -3617,6 +3663,7 @@ function renderWorkout(){
       +'</div></div>'
       +loadSuggest
       +coachRecHtml
+      +machinePrLine
       +lastTrainingBox
       +setHistoryBox
       +machineRow
@@ -4080,7 +4127,7 @@ function upd(idx,field,val){
     if(e)e.textContent=d[g]&&d[r]?Math.round(parseFloat(d[g])*(1+parseFloat(d[r])/30))+' kg':'—';
   });
 
-  if(['g1','r1','g2','r2','g3','r3'].includes(field))updateSetProgressUI(idx);
+  if(['g1','r1','g2','r2','g3','r3'].includes(field)){updateSetProgressUI(idx);updateMachinePRUI(idx);}
 
   // Update warmup toggle when S1 weight changes
   if(field==='g1'){
