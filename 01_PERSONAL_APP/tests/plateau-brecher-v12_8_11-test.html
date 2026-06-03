@@ -2993,6 +2993,40 @@ function countFilledWorkSets(d){
   return count;
 }
 
+function setProgressNum(v){
+  const n=parseFloat(String(v??'').replace(',','.'));
+  return Number.isFinite(n)?n:0;
+}
+function isSetProgressFilled(d,g,r){
+  return setProgressNum(d?.[g])>0&&setProgressNum(d?.[r])>0;
+}
+function getSetProgressState(d,visibleSetCount){
+  const setPairs=[['g1','r1'],['g2','r2'],['g3','r3']].slice(0,visibleSetCount);
+  const setFilled=setPairs.map(([g,r])=>isSetProgressFilled(d,g,r));
+  const filledSets=setFilled.filter(Boolean).length;
+  const nextSetIndex=setFilled.findIndex(filled=>!filled);
+  return{setFilled,filledSets,nextSetIndex,visibleSetCount};
+}
+function updateSetProgressUI(idx){
+  const d=getD(C,W,D,idx);
+  const state=getSetProgressState(d,getVisibleSetCountForExercise(idx));
+  const nextText=state.nextSetIndex>=0?'S'+(state.nextSetIndex+1):'fertig';
+  const progress=document.getElementById('setProgressText_'+idx);
+  if(progress)progress.innerHTML=state.filledSets+'/'+state.visibleSetCount+' erledigt'+(state.nextSetIndex>=0?' &middot; N&auml;chster Satz: '+nextText:'');
+  const count=document.getElementById('setFocusCount_'+idx);
+  if(count)count.innerHTML='S&auml;tze '+state.filledSets+'/'+state.visibleSetCount;
+  const next=document.getElementById('setFocusNext_'+idx);
+  if(next)next.innerHTML='N&auml;chster Satz: '+nextText;
+  const card=document.getElementById('ec'+idx);
+  if(card){
+    card.querySelectorAll('.sets-grid .set-cell').forEach((cell,cellIdx)=>{
+      const setIdx=Math.floor(cellIdx/3);
+      cell.classList.remove('set-row-done','set-row-current','set-row-empty');
+      cell.classList.add(state.setFilled[setIdx]?'set-row-done':(setIdx===state.nextSetIndex?'set-row-current':'set-row-empty'));
+    });
+  }
+}
+
 function getRecommendationDataBasis(exName){
   const wanted=normExLookupName(exName);
   const currentPos=getPlanDayPosition(C,W,D);
@@ -3516,12 +3550,12 @@ function renderWorkout(){
     const wu=d.g1?parseFloat(d.g1):null;
     const isStag=checkStagnation(i);
     const visibleSetCount=getVisibleSetCountForExercise(i);
-    const setPairs=[['g1','r1'],['g2','r2'],['g3','r3']].slice(0,visibleSetCount);
-    const setFilled=setPairs.map(([g,r])=>!!(d[g]&&d[r]));
-    const filledSets=setFilled.filter(Boolean).length;
-    const nextSetIndex=setFilled.findIndex(filled=>!filled);
+    const setProgress=getSetProgressState(d,visibleSetCount);
+    const setFilled=setProgress.setFilled;
+    const filledSets=setProgress.filledSets;
+    const nextSetIndex=setProgress.nextSetIndex;
     const setNextText=nextSetIndex>=0?' &middot; N&auml;chster Satz: S'+(nextSetIndex+1):'';
-    const setProgressLine='<div class="set-progress-line"><span>S&auml;tze</span><b>'+filledSets+'/'+visibleSetCount+' erledigt'+setNextText+'</b></div>';
+    const setProgressLine='<div class="set-progress-line"><span>S&auml;tze</span><b id="setProgressText_'+i+'">'+filledSets+'/'+visibleSetCount+' erledigt'+setNextText+'</b></div>';
     const focusNextText=nextSetIndex>=0?'S'+(nextSetIndex+1):'fertig';
     const lastFilledIndex=setFilled.map((filled,idx)=>filled?idx:-1).filter(idx=>idx>=0).pop();
     const nextEmptyAfterFilled=lastFilledIndex>=0?setFilled.findIndex((filled,idx)=>idx>lastFilledIndex&&!filled):-1;
@@ -3531,8 +3565,8 @@ function renderWorkout(){
     const focusBar='<div class="exercise-focus-bar">'
       +'<div class="exercise-focus-main">'+exName+'</div>'
       +'<div class="exercise-focus-meta">'
-      +'<span class="exercise-focus-chip">S&auml;tze '+filledSets+'/'+visibleSetCount+'</span>'
-      +'<span class="exercise-focus-chip next">N&auml;chster Satz: '+focusNextText+'</span>'
+      +'<span class="exercise-focus-chip" id="setFocusCount_'+i+'">S&auml;tze '+filledSets+'/'+visibleSetCount+'</span>'
+      +'<span class="exercise-focus-chip next" id="setFocusNext_'+i+'">N&auml;chster Satz: '+focusNextText+'</span>'
       +copySetButton
       +'<button class="hist-btn exercise-focus-chip" onclick="event.stopPropagation();showHistory('+i+')" title="Verlauf">Verlauf</button>'
       +'</div></div>';
@@ -4024,6 +4058,8 @@ function upd(idx,field,val){
     const e=document.getElementById(id+idx);
     if(e)e.textContent=d[g]&&d[r]?Math.round(parseFloat(d[g])*(1+parseFloat(d[r])/30))+' kg':'—';
   });
+
+  if(['g1','r1','g2','r2','g3','r3'].includes(field))updateSetProgressUI(idx);
 
   // Update warmup toggle when S1 weight changes
   if(field==='g1'){
