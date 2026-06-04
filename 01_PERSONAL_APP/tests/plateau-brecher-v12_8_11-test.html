@@ -349,6 +349,10 @@ main{padding:14px;max-width:860px;}
 .set-quick-btn{background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.075);color:var(--tx2);font-family:'DM Mono',monospace;font-size:8px;padding:4px 7px;border-radius:999px;cursor:pointer;white-space:nowrap;}
 .set-quick-btn.weight{color:var(--acc);border-color:rgba(200,255,0,.18);background:rgba(200,255,0,.035);}
 .set-quick-btn:active{transform:scale(.98);}
+.set-compare{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-left:auto;}
+.set-compare-chip{font-family:'DM Mono',monospace;font-size:7.5px;color:var(--tx2);background:rgba(255,255,255,.018);border:1px solid rgba(255,255,255,.075);border-radius:999px;padding:3px 6px;white-space:nowrap;}
+.set-compare-chip.positive{color:var(--ok);border-color:rgba(0,230,118,.2);background:rgba(0,230,118,.04);}
+.set-compare-chip.negative{color:var(--warn);border-color:rgba(255,179,0,.22);background:rgba(255,179,0,.045);}
 
 /* WARMUP BLOCK */
 .warmup-toggle{
@@ -1032,6 +1036,8 @@ main{padding:14px;max-width:860px;}
   .quick-apply-btn{display:inline-flex;margin-left:0;margin-top:5px;font-size:8px;padding:4px 7px;}
   .set-quick-actions{gap:4px;margin:-1px 0 3px;}
   .set-quick-btn{font-size:7.5px;padding:4px 6px;}
+  .set-compare{gap:3px;margin-left:0;}
+  .set-compare-chip{font-size:7px;padding:3px 5px;}
   .warmup-toggle{font-size:8px;padding:5px 0;}
   .coach-rec,.load-suggest{font-size:9px;padding:5px 8px;margin-bottom:6px;}
   .stats-row{gap:6px;margin-bottom:8px;}
@@ -3682,17 +3688,17 @@ function renderWorkout(){
       +'<input class="sinput set-cell '+setCls(0)+'" type="number" placeholder="'+ph+'" value="'+d.g1+'" oninput="upd('+i+',\'g1\',this.value)" min="0" step="0.5">'
       +'<input class="sinput set-cell '+setCls(0)+'" type="number" placeholder="Wdh" value="'+d.r1+'" oninput="upd('+i+',\'r1\',this.value)" min="0">'
       +'<div class="orm-inline set-cell '+setCls(0)+'" id="orm1_'+i+'">'+(d.g1&&d.r1?Math.round(parseFloat(d.g1)*(1+parseFloat(d.r1)/30))+' kg':'—')+'</div>'
-      +renderSetQuickActions(i,1)
+      +renderSetQuickActions(i,1,prevData)
       +'<div class="slbl set-cell set-label '+setCls(1)+'">S2</div>'
       +'<input class="sinput set-cell '+setCls(1)+'" type="number" placeholder="'+ph+'" value="'+d.g2+'" oninput="upd('+i+',\'g2\',this.value)" min="0" step="0.5">'
       +'<input class="sinput set-cell '+setCls(1)+'" type="number" placeholder="Wdh" value="'+d.r2+'" oninput="upd('+i+',\'r2\',this.value)" min="0">'
       +'<div class="orm-inline set-cell '+setCls(1)+'" id="orm2_'+i+'">'+(d.g2&&d.r2?Math.round(parseFloat(d.g2)*(1+parseFloat(d.r2)/30))+' kg':'—')+'</div>'
-      +renderSetQuickActions(i,2)
+      +renderSetQuickActions(i,2,prevData)
       +(visibleSetCount>=3?'<div class="slbl set-cell set-label '+setCls(2)+'">S3</div>'
       +'<input class="sinput set-cell '+setCls(2)+'" type="number" placeholder="'+ph+'" value="'+d.g3+'" oninput="upd('+i+',\'g3\',this.value)" min="0" step="0.5">'
       +'<input class="sinput set-cell '+setCls(2)+'" type="number" placeholder="Wdh" value="'+d.r3+'" oninput="upd('+i+',\'r3\',this.value)" min="0">'
       +'<div class="orm-inline set-cell '+setCls(2)+'" id="orm3_'+i+'">'+(d.g3&&d.r3?Math.round(parseFloat(d.g3)*(1+parseFloat(d.r3)/30))+' kg':'—')+'</div>'
-      +renderSetQuickActions(i,3)
+      +renderSetQuickActions(i,3,prevData)
       :'')
       +'</div>'
       +'<div class="rpe-row">'
@@ -3730,10 +3736,50 @@ function toggleWarmup(i){
   body.classList.toggle('wu-open');
 }
 
-function renderSetQuickActions(i,setNo){
+function getSetComparison(currentData,previousData,setNo){
+  const num=(v)=>parseFloat(String(v??'').replace(',','.'));
+  const currentWeight=num(currentData?.['g'+setNo]),currentReps=num(currentData?.['r'+setNo]);
+  const previousWeight=num(previousData?.['g'+setNo]),previousReps=num(previousData?.['r'+setNo]);
+  if(!Number.isFinite(currentWeight)||currentWeight<=0||!Number.isFinite(currentReps)||currentReps<=0)return null;
+  if(!Number.isFinite(previousWeight)||previousWeight<=0||!Number.isFinite(previousReps)||previousReps<=0)return null;
+  return{
+    weight:Math.round((currentWeight-previousWeight)*10)/10,
+    reps:Math.round((currentReps-previousReps)*10)/10
+  };
+}
+
+function renderSetComparison(comparison){
+  if(!comparison)return '';
+  const format=(value,unit)=>{
+    const normalized=Object.is(value,-0)?0:value;
+    const prefix=normalized>0?'+':normalized<0?'':'±';
+    return prefix+String(normalized).replace('.',',')+' '+unit;
+  };
+  const cls=(value)=>value>0?'positive':value<0?'negative':'';
+  if(comparison.weight===0&&comparison.reps===0)return '<span class="set-compare-chip">gleich</span>';
+  return '<span class="set-compare-chip '+cls(comparison.weight)+'">'+format(comparison.weight,'kg')+'</span>'
+    +'<span class="set-compare-chip '+cls(comparison.reps)+'">'+format(comparison.reps,'Wdh')+'</span>';
+}
+
+function updateSetComparisonUI(idx){
+  const d=getD(C,W,D,idx);
+  const week=PLAN[C].weeks[W];
+  const machineValue=getMachineValue(d);
+  const prevEntry=week.isDeload
+    ? findPreviousExerciseEntry(getExName(idx),{sameCycleOnly:true,machine:machineValue})
+    : findPreviousExerciseEntry(getExName(idx),{machine:machineValue});
+  [1,2,3].forEach(setNo=>{
+    const el=document.getElementById('setCompare_'+idx+'_'+setNo);
+    if(el)el.innerHTML=renderSetComparison(getSetComparison(d,prevEntry?.data||null,setNo));
+  });
+}
+
+function renderSetQuickActions(i,setNo,previousData){
+  const comparison=renderSetComparison(getSetComparison(getD(C,W,D,i),previousData,setNo));
   return '<div class="set-quick-actions">'
     +'<button class="set-quick-btn weight" onclick="addSetWeight('+i+','+setNo+',2.5)">+2,5 kg</button>'
     +'<button class="set-quick-btn" onclick="clearSetValues('+i+','+setNo+')">Satz leeren</button>'
+    +'<span class="set-compare" id="setCompare_'+i+'_'+setNo+'">'+comparison+'</span>'
     +'</div>';
 }
 
@@ -4161,7 +4207,7 @@ function upd(idx,field,val){
     if(e)e.textContent=d[g]&&d[r]?Math.round(parseFloat(d[g])*(1+parseFloat(d[r])/30))+' kg':'—';
   });
 
-  if(['g1','r1','g2','r2','g3','r3'].includes(field)){updateSetProgressUI(idx);updateMachinePRUI(idx);}
+  if(['g1','r1','g2','r2','g3','r3'].includes(field)){updateSetProgressUI(idx);updateMachinePRUI(idx);updateSetComparisonUI(idx);}
 
   // Update warmup toggle when S1 weight changes
   if(field==='g1'){
