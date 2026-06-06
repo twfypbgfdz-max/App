@@ -3476,6 +3476,14 @@ function toggleExercisePanel(panel,idx){
   const key=getExercisePanelOpenKey(panel,idx);
   store[key]=!store[key];
   persist();
+  if(panel==='set_history'){
+    const box=document.getElementById('setHistoryBox_'+idx);
+    const arrow=document.getElementById('setHistoryArrow_'+idx);
+    if(!box||!arrow){renderWorkout();return;}
+    box.classList.toggle('open',!!store[key]);
+    arrow.innerHTML=store[key]?'▾':'▸';
+    return;
+  }
   renderWorkout();
 }
 
@@ -3486,13 +3494,13 @@ function renderSetHistoryBox(exName,machine,idx){
   const arrow=isOpen?'▾':'▸';
   const label='Verlauf'+(rows.length?' ('+rows.length+' Eintr&auml;ge)':'');
   if(!rows.length){
-    return '<div class="set-history-box'+openClass+'">'
-      +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span>'+arrow+'</span></button>'
+    return '<div class="set-history-box'+openClass+'" id="setHistoryBox_'+idx+'">'
+      +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span id="setHistoryArrow_'+idx+'">'+arrow+'</span></button>'
       +'<div class="set-history-list"><div class="set-history-main">Keine Verlaufseintr&auml;ge f&uuml;r dieses Ger&auml;t</div></div>'
       +'</div>';
   }
-  return '<div class="set-history-box'+openClass+'">'
-    +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span>'+arrow+'</span></button>'
+  return '<div class="set-history-box'+openClass+'" id="setHistoryBox_'+idx+'">'
+    +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span id="setHistoryArrow_'+idx+'">'+arrow+'</span></button>'
     +'<div class="set-history-list">'
     +rows.map(r=>{
       const d=r.data||{};
