@@ -170,8 +170,9 @@ main{padding:14px;max-width:860px;}
 .last-training-note{margin-top:5px;color:var(--mu);overflow-wrap:anywhere;}
 .last-training-note b{color:var(--tx2);font-weight:500;}
 .set-history-box{font-family:'DM Mono',monospace;font-size:8.5px;line-height:1.45;color:var(--tx2);background:rgba(255,255,255,.012);border:1px solid rgba(255,255,255,.055);border-radius:var(--r);padding:6px 8px;margin-bottom:6px;}
-.set-history-title{color:var(--mu);letter-spacing:.7px;text-transform:uppercase;font-size:8px;margin-bottom:4px;}
-.set-history-list{display:grid;gap:3px;}
+.set-history-title{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;border:0;color:var(--mu);letter-spacing:.7px;text-transform:uppercase;font-family:'DM Mono',monospace;font-size:8px;margin:0;padding:0 0 4px;text-align:left;cursor:pointer;}
+.set-history-list{display:none;gap:3px;}
+.set-history-box.open .set-history-list{display:grid;}
 .set-history-row{display:grid;grid-template-columns:42px minmax(0,1fr);gap:7px;align-items:center;}
 .set-history-date{color:var(--mu);white-space:nowrap;}
 .set-history-main{color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -303,7 +304,7 @@ main{padding:14px;max-width:860px;}
 .excard.done .ex-chevron{color:var(--ok);}
 .exercise-focus-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.016);border:1px solid rgba(255,255,255,.06);border-left:3px solid rgba(200,255,0,.3);border-radius:var(--r);padding:5px 8px;margin:0 0 6px;}
 .exercise-focus-main{min-width:0;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:.7px;color:var(--tx);line-height:1.05;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.exercise-focus-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;}
+.exercise-focus-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-start;flex:1;min-width:0;}
 .exercise-focus-chip{font-family:'DM Mono',monospace;font-size:8px;color:var(--tx2);background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:3px 6px;white-space:nowrap;}
 .exercise-focus-chip.next{color:var(--acc);border-color:rgba(200,255,0,.2);background:rgba(200,255,0,.035);}
 .exercise-focus-chip.action{cursor:pointer;color:var(--acc3);border-color:rgba(0,212,255,.18);background:rgba(0,212,255,.04);}
@@ -3463,16 +3464,35 @@ function collectExerciseSetHistory(exName,limit=4,machine){
   }
   return rows;
 }
-function renderSetHistoryBox(exName,machine){
+function getExercisePanelOpenKey(panel,idx){
+  return panel+'_open_'+C+'_'+W+'_'+D+'_'+idx;
+}
+
+function isExercisePanelOpen(panel,idx){
+  return store[getExercisePanelOpenKey(panel,idx)]===true;
+}
+
+function toggleExercisePanel(panel,idx){
+  const key=getExercisePanelOpenKey(panel,idx);
+  store[key]=!store[key];
+  persist();
+  renderWorkout();
+}
+
+function renderSetHistoryBox(exName,machine,idx){
   const rows=collectExerciseSetHistory(exName,4,machine);
+  const isOpen=isExercisePanelOpen('set_history',idx);
+  const openClass=isOpen?' open':'';
+  const arrow=isOpen?'▾':'▸';
+  const label='Verlauf'+(rows.length?' ('+rows.length+' Eintr&auml;ge)':'');
   if(!rows.length){
-    return '<div class="set-history-box">'
-      +'<div class="set-history-title">Verlauf</div>'
+    return '<div class="set-history-box'+openClass+'">'
+      +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span>'+arrow+'</span></button>'
       +'<div class="set-history-list"><div class="set-history-main">Keine Verlaufseintr&auml;ge f&uuml;r dieses Ger&auml;t</div></div>'
       +'</div>';
   }
-  return '<div class="set-history-box">'
-    +'<div class="set-history-title">Verlauf</div>'
+  return '<div class="set-history-box'+openClass+'">'
+    +'<button class="set-history-title" type="button" onclick="toggleExercisePanel(\'set_history\','+idx+')"><span>'+label+'</span><span>'+arrow+'</span></button>'
     +'<div class="set-history-list">'
     +rows.map(r=>{
       const d=r.data||{};
@@ -3582,7 +3602,7 @@ function renderWorkout(){
       if(prevEntry.g1)prevG=prevEntry.g1;
     }
     const lastTrainingBox=renderLastTrainingBox(prevEntry,machineValue,i);
-    const setHistoryBox=renderSetHistoryBox(exName,machineValue);
+    const setHistoryBox=renderSetHistoryBox(exName,machineValue,i);
 
     const machineRow='<div class="machine-row"><span class="machine-lbl">Ger&auml;t</span><select class="machine-select" onchange="upd('+i+',\'machine\',this.value)">'+renderMachineOptions(machineValue)+'</select></div>';
     const machineWarning=buildMachineWarning(machineValue,prevData);
@@ -3641,7 +3661,6 @@ function renderWorkout(){
       ? '<button class="exercise-focus-chip action" onclick="event.stopPropagation();copyPreviousSetToNext('+i+')" title="Letzten Satz in den nächsten leeren Satz kopieren">Satz kopieren</button>'
       : '';
     const focusBar='<div class="exercise-focus-bar">'
-      +'<div class="exercise-focus-main">'+exName+'</div>'
       +'<div class="exercise-focus-meta">'
       +'<span class="exercise-focus-chip" id="setFocusCount_'+i+'">S&auml;tze '+filledSets+'/'+visibleSetCount+'</span>'
       +'<span class="exercise-focus-chip next" id="setFocusNext_'+i+'">N&auml;chster Satz: '+focusNextText+'</span>'
