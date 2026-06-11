@@ -2,6 +2,32 @@
 
 Zentrale Repo-Dokumentation: `00_PROJEKT_DOKU/REPO_STRUKTUR.md`
 
+Vor jeder Analyse prüfen:
+- `00_PROJEKT_DOKU/FEATURE_IDEEN.md`
+- `00_PROJEKT_DOKU/REPO_STRUKTUR.md`
+
+
+
+\## Feature-Ideen-Pflege
+
+Codex muss bei jeder Feature-, Bugfix-, Analyse- oder Review-Aufgabe prüfen, ob `00_PROJEKT_DOKU/FEATURE_IDEEN.md` betroffen ist.
+
+Wenn sich durch die Aufgabe etwas am Feature-Status ändert, muss Codex die Datei selbstständig aktualisieren.
+
+Beispiele:
+\- neues Feature entdeckt -> in `Offen` ergänzen
+\- Feature geplant -> Status/Notiz aktualisieren
+\- Feature umgesetzt -> nach `Fertig` verschieben
+\- Feature teilweise umgesetzt -> nach `Teilweise umgesetzt` verschieben
+\- Analyseergebnis vorhanden -> kurze Fundstellen/Notiz ergänzen
+\- Feature verworfen/geparkt -> Status/Notiz entsprechend setzen
+
+Wichtig:
+\- Änderungen an `FEATURE_IDEEN.md` immer im Abschlussbericht nennen.
+\- Keine erfundenen Statusänderungen.
+\- Nur aktualisieren, wenn die Aufgabe es wirklich betrifft.
+\- App-Code und Doku-Update im selben Arbeitsstand sind erlaubt, aber im Bericht klar trennen.
+
 
 
 \## Grundregel
