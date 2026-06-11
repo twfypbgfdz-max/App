@@ -114,6 +114,8 @@ main{padding:14px;max-width:860px;}
 }
 .ctitle{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.4px;color:var(--tx);}
 .cdate{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--mu);letter-spacing:.8px;}
+.template-save-btn{background:rgba(255,255,255,.024);border:1px solid rgba(255,255,255,.08);color:var(--tx2);font-family:'DM Mono',monospace;font-size:8.5px;padding:6px 9px;min-height:32px;border-radius:var(--r);cursor:pointer;letter-spacing:.5px;}
+.template-save-btn:hover{border-color:rgba(200,255,0,.28);color:var(--acc);background:rgba(200,255,0,.035);}
 .deload-tag{background:rgba(255,61,0,.16);border:1px solid rgba(255,111,64,.25);color:#ffb199;font-family:'DM Mono',monospace;font-size:8.5px;padding:4px 8px;letter-spacing:.8px;border-radius:999px;font-weight:700;}
 
 /* INFO ROW */
@@ -1768,6 +1770,34 @@ if(Object.keys(store).length===0){try{const old=JSON.parse(localStorage.getItem(
 
 function persist(){try{localStorage.setItem(SK,JSON.stringify(store));}catch(e){}}
 function saveStore(){persist();}
+function getPlanTemplates(){
+  return Array.isArray(store._planTemplates)?store._planTemplates:[];
+}
+function savePlanTemplates(list){
+  store._planTemplates=Array.isArray(list)?list:[];
+  persist();
+}
+function createTemplateFromCurrentDay(){
+  const day=PLAN?.[C]?.weeks?.[W]?.days?.[D];
+  if(!day||!Array.isArray(day.exercises)){alert('Keine gueltige Trainingstag-Vorlage gefunden.');return;}
+  const ok=confirm('Es werden nur Übungen gespeichert. Trainingsdaten, Notizen, Geräte und PRs werden nicht übernommen.');
+  if(!ok)return;
+  const createdAt=new Date().toISOString();
+  const template={
+    id:'tpl_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),
+    name:String((day.tag||'Trainingstag')+' '+(day.date||'')).trim(),
+    createdAt,
+    source:{c:C,w:W,d:D,date:day.date||'',tag:day.tag||''},
+    tag:day.tag||'',
+    muscle:day.muscle||'',
+    exercises:day.exercises.map(ex=>String(ex||''))
+  };
+  const list=getPlanTemplates().slice();
+  list.push(template);
+  savePlanTemplates(list);
+  if(typeof showStatus==='function')showStatus('ok','Vorlage gespeichert: '+template.name);
+  else alert('Vorlage gespeichert: '+template.name);
+}
 const MACHINE_OPTIONS=[
   'Standard',
   'Life Fitness',
@@ -3580,6 +3610,7 @@ function renderWorkout(){
   document.getElementById('cinfo').innerHTML=
     '<div class="ctitle">ZYKLUS '+(C+1)+' — '+week.weekLabel+'</div>'+
     '<div class="cdate">'+week.days.map(d=>d.date).join(' · ')+'</div>'+
+    '<button class="template-save-btn" type="button" onclick="createTemplateFromCurrentDay()">Als Vorlage speichern</button>'+
     (week.isDeload?'<span class="deload-tag">'+deloadBannerText+'</span>':'')+
     (week.isSchool?'<span class="deload-tag deload-tag-school">⛔ SCHULWOCHE — 3 Tage</span>':'');
 
