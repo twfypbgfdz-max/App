@@ -2,6 +2,10 @@
 
 Zentrale Repo-Dokumentation: `00_PROJEKT_DOKU/REPO_STRUKTUR.md`
 
+Vor jeder Analyse prüfen:
+- `00_PROJEKT_DOKU/FEATURE_IDEEN.md`
+- `00_PROJEKT_DOKU/REPO_STRUKTUR.md`
+
 
 
 \## Grundregel
