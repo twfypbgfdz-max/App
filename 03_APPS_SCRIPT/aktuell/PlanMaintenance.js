@@ -268,7 +268,7 @@ function applyEnsureZyklus2MissingWeeksV12812InsertOnly() {
   if (preflight.blocked.length > 0) {
     preflight.dryRun = false;
     preflight.applied = false;
-    preflight.recommendation = 'ABBRUCH: Unklare Struktur oder blockierende Abweichung. Es wurde nichts geschrieben.';
+    preflight.recommendation = 'ABBRUCH: Echte Apply-Blocker vorhanden. Es wurde nichts geschrieben.';
     Logger.log(JSON.stringify(preflight, null, 2));
     return preflight;
   }
@@ -279,7 +279,8 @@ function ensureZyklus2MissingWeeksV12812InsertOnly_(options) {
   const dryRun = !options || options.dryRun !== false;
   const sheetName = 'ZYKLUS 2';
   const plan = buildCanonicalAppPlanBlocksV1289_()[1];
-  const weeksToCheck = [2, 3, 4];
+  const existingWeeksToInspect = [2, 3];
+  const targetWeekIndex = 4;
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(sheetName);
   const report = {
@@ -292,6 +293,8 @@ function ensureZyklus2MissingWeeksV12812InsertOnly_(options) {
     plannedInserts: [],
     inserted: [],
     blocked: [],
+    warnings: [],
+    existingWeekDifferences: [],
     existingTrainingValuesBelowInsert: []
   };
 
@@ -316,7 +319,7 @@ function ensureZyklus2MissingWeeksV12812InsertOnly_(options) {
   report.existingDates = Object.keys(dateMap).sort();
   let simulatedLastRow = lastRow;
 
-  weeksToCheck.forEach(function(weekIndex) {
+  existingWeeksToInspect.forEach(function(weekIndex) {
     const weekNumber = weekIndex + 1;
     const weekLabel = 'Woche ' + weekNumber;
     const week = plan.weeks[weekIndex];
@@ -325,82 +328,146 @@ function ensureZyklus2MissingWeeksV12812InsertOnly_(options) {
       return;
     }
 
-    const targetDates = week.days.map(function(day) { return day.date; });
-    const existingTargetDates = targetDates.filter(function(date) { return !!dateMap[date]; });
     const existing = weekMap[weekLabel];
-
     if (existing && existing.rows.length > 0) {
       const check = validateExistingWeekBlock_(sheetName, weekLabel, existing.rows, week);
       if (check.ok) {
-        report.existingWeeks.push(weekLabel + ' ok');
+        report.warnings.push({
+          weekLabel,
+          rows: existing.rows.length,
+          reason: 'Existing week present; not modified by targeted Z2/W5 helper.'
+        });
       } else {
-        report.blocked = report.blocked.concat(check.blocked);
+        report.existingWeekDifferences.push({
+          weekLabel,
+          differences: check.blocked,
+          reason: 'Existing week differs from canonical helper data; warning only, no modification planned.'
+        });
       }
       return;
     }
 
-    if (existingTargetDates.length > 0) {
-      report.skippedExistingDates.push({
+    report.blocked.push({
+      weekLabel,
+      reason: 'Required previous week is missing; insert position for Woche 5 is unclear.'
+    });
+  });
+
+  if (report.blocked.length > 0) {
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
+
+  const weekNumber = targetWeekIndex + 1;
+  const weekLabel = 'Woche ' + weekNumber;
+  const week = plan.weeks[targetWeekIndex];
+  if (!week) {
+    report.blocked.push({ weekLabel, reason: 'Canonical week missing.' });
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
+
+  const targetDates = week.days.map(function(day) { return day.date; });
+  const existingTargetDates = targetDates.filter(function(date) { return !!dateMap[date]; });
+  const existing = weekMap[weekLabel];
+
+  if (existing && existing.rows.length > 0) {
+    const check = validateExistingWeekBlock_(sheetName, weekLabel, existing.rows, week);
+    if (check.ok && existingTargetDates.length === targetDates.length) {
+      report.warnings.push({
+        weekLabel,
+        rows: existing.rows.length,
+        reason: 'Target week already exists completely; no insert needed.'
+      });
+    } else {
+      report.blocked.push({
         weekLabel,
         targetDates,
         existingTargetDates,
-        reason: 'Target date already exists; insert-only helper does not create partial duplicate days.'
-      });
-      return;
-    }
-
-    const insertAfter = findInsertAfterRowForWeek_(weekNumber, weekMap, simulatedLastRow);
-    if (insertAfter < 3) {
-      report.blocked.push({ weekLabel, reason: 'Unclear insert position.' });
-      return;
-    }
-
-    const rowsToInsert = buildCanonicalWeekRows_(weekNumber, week);
-    const shiftedTrainingRows = collectTrainingValueRowsAfter_(values, insertAfter);
-    if (shiftedTrainingRows.length) {
-      report.existingTrainingValuesBelowInsert.push({
-        weekLabel,
-        insertAfter,
-        rows: shiftedTrainingRows
+        differences: check.blocked,
+        reason: 'Target week is already partially present or differs; insert-only helper will not modify existing rows.'
       });
     }
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
 
-    report.missingWeeks.push({ weekLabel, targetDates });
-    report.plannedInserts.push({
+  if (existingTargetDates.length > 0) {
+    report.skippedExistingDates.push({
+      weekLabel,
+      targetDates,
+      existingTargetDates,
+      reason: 'Target date already exists; insert-only helper does not create partial duplicate days.'
+    });
+    report.blocked.push({
+      weekLabel,
+      targetDates,
+      existingTargetDates,
+      reason: 'Target date already exists.'
+    });
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
+
+  const insertAfter = findInsertAfterRowForWeek_(weekNumber, weekMap, simulatedLastRow);
+  if (insertAfter < 3) {
+    report.blocked.push({ weekLabel, reason: 'Unclear insert position.' });
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
+
+  const rowsToInsert = buildCanonicalWeekRows_(weekNumber, week);
+  const shiftedTrainingRows = collectTrainingValueRowsAfter_(values, insertAfter);
+  if (shiftedTrainingRows.length) {
+    report.existingTrainingValuesBelowInsert.push({
       weekLabel,
       insertAfter,
-      rows: rowsToInsert.length,
-      targetDates,
-      action: dryRun ? 'would insert missing week block' : 'insert missing week block'
+      rows: shiftedTrainingRows
     });
-
-    if (!dryRun) {
-      sheet.insertRowsAfter(insertAfter, rowsToInsert.length);
-      sheet.getRange(insertAfter + 1, 1, rowsToInsert.length, 22).setValues(rowsToInsert);
-    }
-
-    simulatedLastRow += rowsToInsert.length;
-    shiftWeekMapAfterInsert_(weekMap, insertAfter, rowsToInsert.length);
-    weekMap[weekLabel] = {
-      start: insertAfter + 1,
-      end: insertAfter + rowsToInsert.length,
-      rows: rowsToInsert.map(function(row, idx) {
-        return { rowNumber: insertAfter + 1 + idx, values: row };
-      })
-    };
-    rowsToInsert.forEach(function(row, idx) {
-      const date = normalizeMaintenanceDateKey_(row[1]);
-      if (!date) return;
-      if (!dateMap[date]) dateMap[date] = [];
-      dateMap[date].push({ rowNumber: insertAfter + 1 + idx, values: row });
-    });
-
-    report.inserted.push({
+    report.blocked.push({
       weekLabel,
-      rows: rowsToInsert.length,
-      afterRow: insertAfter,
-      action: dryRun ? 'dry-run only' : 'inserted'
+      insertAfter,
+      reason: 'Existing training values below insert position could be shifted; aborting targeted helper.'
     });
+    Logger.log(JSON.stringify(report, null, 2));
+    return report;
+  }
+
+  report.missingWeeks.push({ weekLabel, targetDates });
+  report.plannedInserts.push({
+    weekLabel,
+    insertAfter,
+    rows: rowsToInsert.length,
+    targetDates,
+    action: dryRun ? 'would insert missing week block' : 'insert missing week block'
+  });
+
+  if (!dryRun) {
+    sheet.insertRowsAfter(insertAfter, rowsToInsert.length);
+    sheet.getRange(insertAfter + 1, 1, rowsToInsert.length, 22).setValues(rowsToInsert);
+  }
+
+  simulatedLastRow += rowsToInsert.length;
+  shiftWeekMapAfterInsert_(weekMap, insertAfter, rowsToInsert.length);
+  weekMap[weekLabel] = {
+    start: insertAfter + 1,
+    end: insertAfter + rowsToInsert.length,
+    rows: rowsToInsert.map(function(row, idx) {
+      return { rowNumber: insertAfter + 1 + idx, values: row };
+    })
+  };
+  rowsToInsert.forEach(function(row, idx) {
+    const date = normalizeMaintenanceDateKey_(row[1]);
+    if (!date) return;
+    if (!dateMap[date]) dateMap[date] = [];
+    dateMap[date].push({ rowNumber: insertAfter + 1 + idx, values: row });
+  });
+
+  report.inserted.push({
+    weekLabel,
+    rows: rowsToInsert.length,
+    afterRow: insertAfter,
+    action: dryRun ? 'dry-run only' : 'inserted'
   });
 
   Logger.log(JSON.stringify(report, null, 2));
