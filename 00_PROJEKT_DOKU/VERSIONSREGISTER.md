@@ -18,7 +18,8 @@ Fuer jede Version dokumentieren:
 
 | Version | Dateiname | Pfad | Commit | Status | Kurzbeschreibung |
 | --- | --- | --- | --- | --- | --- |
-| V12.8.11-test | plateau-brecher-v12_8_11-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_11-test.html | 99b2582 | AKTIVE BASIS | Aktive Testbasis aus V12.8.10-Basis; Dateiname an APP_VERSION angeglichen und UX-Text fuer Tageszusammenfassung uebernommen. |
+| V12.8.12-test | plateau-brecher-v12_8_12-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_12-test.html | Noch nicht committed | AKTIVE BASIS | Fehlenden PLAN-Block 22.06-27.06 ergaenzt und Startdiagnose fuer fehlende aktuelle Kalenderwoche eingebaut. |
+| V12.8.11-test | plateau-brecher-v12_8_11-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_11-test.html | 99b2582 | TESTVERSION | Vorherige aktive Testbasis aus V12.8.10-Basis; Dateiname an APP_VERSION angeglichen und UX-Text fuer Tageszusammenfassung uebernommen. |
 | V12.8.11-test | plateau-brecher-v12_8_11.html | 00_AKTUELL/personal_latest/plateau-brecher-v12_8_11.html | Release-Commit siehe Git-Log | Stable vorbereitet - nicht deployt | 1:1-Kopie der aktiven Testbasis; fuer spaeteren Push/Deploy vorbereitet. |
 | V12.8.10-test | plateau-brecher-v12_8_5-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_5-test.html | 4f2db32 | TESTVERSION | Fruehere echte Basis vor V12.8.11-test. |
 | V12.8.10-test | plateau-brecher-v12_8_10-test.html | 01_PERSONAL_APP/backups/plateau-brecher-v12_8_10-test.html | Unbekannt / pruefen | BACKUP | Backup-Kopie der V12.8.10-test-Basis; nicht als Arbeitsdatei verwenden. |
