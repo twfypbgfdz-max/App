@@ -1,25 +1,25 @@
 # AKTUELLE ENTWICKLUNGSBASIS
 
 Datei:
-`01_PERSONAL_APP/tests/plateau-brecher-v12_8_11-test.html`
+`01_PERSONAL_APP/tests/plateau-brecher-v12_8_12-test.html`
 
 APP_VERSION:
-`V12.8.11-test`
+`V12.8.12-test`
 
 BUILD_DATE:
-`02.06.2026`
+`23.06.2026`
 
 Commit:
-`99b2582`
+`Noch nicht committed`
 
 Status:
 Aktive Entwicklungsbasis
 
 Vorbereitete Stable:
-`00_AKTUELL/personal_latest/plateau-brecher-v12_8_11.html`
+`Keine fuer V12.8.12-test`
 
 Stable-Status:
-Stable vorbereitet - nicht deployt
+Nicht vorbereitet, nicht deployt
 
 Wichtige Regel:
 Nur diese Datei weiterentwickeln.
