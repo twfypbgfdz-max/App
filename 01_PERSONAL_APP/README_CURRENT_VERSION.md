@@ -1,13 +1,13 @@
 # AKTUELLE ENTWICKLUNGSBASIS
 
 Datei:
-`01_PERSONAL_APP/tests/plateau-brecher-v12_8_12-test.html`
+`01_PERSONAL_APP/tests/plateau-brecher-v12_8_13-test.html`
 
 APP_VERSION:
-`V12.8.12-test`
+`V12.8.13-test`
 
 BUILD_DATE:
-`23.06.2026`
+`24.06.2026`
 
 Commit:
 `Noch nicht committed`
@@ -30,4 +30,4 @@ Nicht verwenden:
 - archivierte Versionen
 
 Hinweis:
-`01_PERSONAL_APP/tests/plateau-brecher-v12_8_4-test.html` wurde versehentlich gepatcht und ist nicht die aktuelle Basis.
+`V12.8.13-test` basiert auf `V12.8.12-test` und verbessert nur die Diagnose bei App-PLAN/Sheet-PLAN-Abweichungen im Save-Preflight.
