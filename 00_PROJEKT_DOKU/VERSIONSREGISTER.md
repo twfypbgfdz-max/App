@@ -18,7 +18,8 @@ Fuer jede Version dokumentieren:
 
 | Version | Dateiname | Pfad | Commit | Status | Kurzbeschreibung |
 | --- | --- | --- | --- | --- | --- |
-| V12.8.14-test | plateau-brecher-v12_8_14-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_14-test.html | Noch nicht committed | AKTIVE BASIS | PB-029 Phase 2: App-PLAN-Gap-Diagnose erkennt fehlende Kalenderwochen diagnostisch und erweitert die Anzeige bei fehlender aktueller PLAN-Woche. |
+| V12.8.15-test | plateau-brecher-v12_8_15-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_15-test.html | Noch nicht committed | AKTIVE BASIS | PB-029 Phase 3: PLAN-Diagnose zeigt bei fehlender aktueller Kalenderwoche einen nicht gespeicherten Vorschlag aus der letzten vollstaendigen PLAN-Woche. |
+| V12.8.14-test | plateau-brecher-v12_8_14-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_14-test.html | Noch nicht committed | TESTVERSION | PB-029 Phase 2: App-PLAN-Gap-Diagnose erkennt fehlende Kalenderwochen diagnostisch und erweitert die Anzeige bei fehlender aktueller PLAN-Woche. |
 | V12.8.13-test | plateau-brecher-v12_8_13-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_13-test.html | Noch nicht committed | TESTVERSION | PB-029 Phase 1b: Save-Preflight zeigt klare Diagnose bei fehlenden Sheet-Planzeilen und praezisere Anzahlmeldung bei App-PLAN/Sheet-PLAN-Abweichung. |
 | V12.8.12-test | plateau-brecher-v12_8_12-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_12-test.html | Noch nicht committed | TESTVERSION | Fehlenden PLAN-Block 22.06-27.06 ergaenzt und Startdiagnose fuer fehlende aktuelle Kalenderwoche eingebaut. |
 | V12.8.11-test | plateau-brecher-v12_8_11-test.html | 01_PERSONAL_APP/tests/plateau-brecher-v12_8_11-test.html | 99b2582 | TESTVERSION | Vorherige aktive Testbasis aus V12.8.10-Basis; Dateiname an APP_VERSION angeglichen und UX-Text fuer Tageszusammenfassung uebernommen. |

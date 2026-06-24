@@ -8,7 +8,7 @@
 | PB-013 | Notiz pro Satz                      | Teilweise | P2   | aktuell nur Übungsnotiz  |
 | PB-021 | Kalender-/Trainingsfrequenz-Heatmap | Fertig    | P2   | Trainingsfrequenz-Heatmap + Streaks umgesetzt; Muskel-Heatmap bleibt separat |
 | PB-028 | Gerätespezifische PRs ins Sheet     | Teilweise | P3   | lokal vorhanden          |
-| PB-029 | Robuste Plan-Kalenderlogik          | Teilweise | P1   | V12.8.14-test Phase 2: App-PLAN-Gap-Diagnose erkennt fehlende Kalenderwochen im eingebetteten PLAN diagnostisch; Phase 1b: Save-Preflight diagnostiziert fehlende Sheet-Planzeilen klarer; offen: Plan zyklisch fortschreiben, Schul-/Arbeitszeiten beruecksichtigen |
+| PB-029 | Robuste Plan-Kalenderlogik          | Teilweise | P1   | V12.8.15-test Phase 3: PLAN-Diagnose schlaegt fehlende Wochen aus der letzten vollstaendigen PLAN-Woche vor, ohne zu speichern; offen: Plan zyklisch fortschreiben, Schul-/Arbeitszeiten beruecksichtigen |
 
 ## Teilweise umgesetzt
 
