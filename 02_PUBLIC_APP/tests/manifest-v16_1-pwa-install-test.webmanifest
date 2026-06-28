@@ -1,0 +1,19 @@
+{
+  "name": "Plateau Brecher Public",
+  "short_name": "PB Public",
+  "description": "Public test version of Plateau Brecher with local mode and friend cloud sync.",
+  "start_url": "./plateau-brecher-public-v16_1-pwa-install-test.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./pb-public-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
