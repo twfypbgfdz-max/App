@@ -9,6 +9,7 @@
 | PB-021 | Kalender-/Trainingsfrequenz-Heatmap | Fertig    | P2   | Trainingsfrequenz-Heatmap + Streaks umgesetzt; Muskel-Heatmap bleibt separat |
 | PB-028 | Gerätespezifische PRs ins Sheet     | Teilweise | P3   | lokal vorhanden          |
 | PB-029 | Robuste Plan-Kalenderlogik          | Teilweise | P1   | V12.8.15-test Phase 3: PLAN-Diagnose schlaegt fehlende Wochen aus der letzten vollstaendigen PLAN-Woche vor, ohne zu speichern; offen: Plan zyklisch fortschreiben, Schul-/Arbeitszeiten beruecksichtigen |
+| PB-030 | Public Friend Mode / zentraler Public-Sync | Teilweise | P1   | V16.0-friend-mode-test vorbereitet Lokalmodus, Cloud-Code-UI, PublicSync-Endpoint, PIN-Session-Fix und defensive CloudData-Sync-Guards; offen: Browser/Sheet-End-to-End-Test und Deployment-Freigabe |
 
 ## Teilweise umgesetzt
 
